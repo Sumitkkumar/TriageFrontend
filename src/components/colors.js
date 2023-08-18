@@ -1,0 +1,16 @@
+// colors.js
+export const neutral50 = '#fafafa';
+export const neutral100 = '#f5f5f5';
+export const gray200 = '#e5e7eb';
+export const gray300 = '#d1d5db';
+export const gray400 = '#9ca3af';
+export const gray500 = '#6b7280';
+export const gray600 = '#4b5563';
+export const gray700 = '#374151';
+export const gray800 = '#1f2937';
+export const purple300 = '#d8b4fe';
+export const purple700 = '#7e22ce';
+export const purple800 = '#6b21a8';
+export const purple900 = '#581c87';
+export const violet600 = '#7c3aed';
+export const green600 = '#65a30d';
