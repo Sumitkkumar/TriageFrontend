@@ -3,6 +3,7 @@
     /* border: 2px solid black; */
     margin-top: 1rem;
     margin-bottom: 1.5rem;
+    z-index: 2;
 }
 
 .formContainer input {
@@ -49,6 +50,7 @@
 
 .tableContainer {
     margin-top: 2rem;
+    z-index: 2;
     width: 100%;
     height: auto;
     /* border: 1px solid white; */
@@ -59,6 +61,7 @@
     margin: 25px 0;
     font-size: 1rem;
     min-width: 400px;
+    z-index: 2;
 }
 
 .orderContentTable thead tr {
@@ -85,6 +88,7 @@
 
 .dataflowContainer {
     width: 90%;
+    z-index: 2;
 }
 
 .dataflowBox {
