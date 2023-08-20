@@ -8,7 +8,7 @@ export const SidebarLinks = [
         title: "Get Order",
         icon: <BsFillBasketFill />,
         link: "/getOrder",
-        selected: true
+        selected: false
     },
     {
         index: 2,

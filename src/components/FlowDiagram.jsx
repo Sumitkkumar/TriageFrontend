@@ -1,6 +1,5 @@
 import React, { useRef, useEffect } from 'react';
 import * as joint from 'jointjs';
-import dagre from 'dagre';
 import data from './data.json';
 import * as colors from './colors';
 
@@ -26,7 +25,7 @@ const FlowDiagram = () => {
     data.dataflows.forEach((flow, index) => {
         // console.log(index);
       const node = new joint.shapes.standard.Rectangle({
-        position: { x: (index+0.075) * 270, y: 75 },
+        position: { x: (index+0.45) * 325, y: 75 },
         size: { width: 225, height: 50 },
         attrs: {
           label: { 
@@ -34,8 +33,8 @@ const FlowDiagram = () => {
                 fontFamily: 'Arial' 
             },
           body: {
-            fill: flow.failed === 'true' ? '#ffcccc' : '#f0f0f0',
-            stroke: flow.failed === 'true' ? '#ff0000' : '#999',
+            fill: flow.failed === true ? colors.red300 : colors.gray200,
+            stroke: flow.failed === true ? colors.red600 : colors.gray400,
             strokeWidth: 1,
           },
         },
@@ -54,7 +53,7 @@ const FlowDiagram = () => {
         target: { id: targetNode.id },
         attrs: {
           '.connection': { stroke: '#333', 'stroke-width': 3 },
-        //   '.marker-target': { d: 'M 10 0 L 0 5 L 10 10 z' },
+          '.marker-target': { d: 'M 10 0 L 0 5 L 10 10 z' },
         },
       });
 

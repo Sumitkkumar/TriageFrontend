@@ -14,3 +14,6 @@ export const purple800 = '#6b21a8';
 export const purple900 = '#581c87';
 export const violet600 = '#7c3aed';
 export const green600 = '#65a30d';
+export const red300 = '#fca5a5';
+export const red400 = '#f87171';
+export const red600 = '#dc2626';

@@ -13,7 +13,7 @@
             "dataflowName": "ORDER-STATUS-UPDATE",
             "triggered": "Yes",
             "rapiToWareHouse": "Yes",
-            "wareHouseToRapi": "Yes",
+            "wareHouseToRapi": "Yes" ,
             "conversationId": "8500689475904576",
             "failed": false
         },

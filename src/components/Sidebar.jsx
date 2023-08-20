@@ -4,11 +4,11 @@ import { SidebarLinks } from './SidebarLinks'
 import "./css/Sidebar.css"
 
 const Sidebar = () => {
-  const [selected, setSelected] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(false);
 
-  const handleLinkClick = (event, key) => {
-      console.log(event.target);
-      console.log("key: " + key);
+  const handleLinkClick = (index) => {
+      console.log(index);
+      setSelectedIndex(index)
   }
 
   return (
@@ -19,14 +19,14 @@ const Sidebar = () => {
                 return (
                     <li 
                       key={sidebarLink.index} 
-                      onClick={handleLinkClick}
-                      className= {(sidebarLink.selected) && 'selected'}
+                      onClick={() => handleLinkClick(sidebarLink.index)}
+                      className= {selectedIndex === sidebarLink.index ? 'selected' : ''}
                     >
 
                         <p className='icons'>{sidebarLink.icon}</p>
                         <Link 
                             to={sidebarLink.link}
-                            className= {(sidebarLink.selected) && 'selected-text'}
+                            className= {selectedIndex === sidebarLink.index ? 'selected-text' : ''}
                             >
                           {sidebarLink.title}
                         </Link>

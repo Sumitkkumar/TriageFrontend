@@ -3,9 +3,9 @@
     top:80px;
     min-height: 100vh;
     /* height: calc(100vh - 80px) ; */
-    width: 250px;
+    width: 200px;
     background-color: var(--gray-100);
-    border-right: 2px solid var(--slate-800);
+    border-right: 1px solid var(--gray-300);
     color: var(--gray-700);
   }
   
@@ -29,7 +29,6 @@
   
   .sidebar ul li a {
     text-decoration: none;
-    /* color: var(--gray-700); */
   }
   
   /* Hover States */
@@ -39,8 +38,20 @@
     border-radius: 5px;
   }
   
+  .selected:active {
+    background-color: var(--purple-700);
+    border-radius: 5px;
+    color: var(--neutral-50);
+  }
 
   .selected {
+    background-color: var(--purple-700);
+    border-radius: 5px;
+    color: var(--neutral-50);
+    font-weight: 600;
+  }
+
+  .selected:hover {
     background-color: var(--purple-700);
     border-radius: 5px;
     color: var(--neutral-50);
