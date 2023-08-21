@@ -1,5 +1,5 @@
 .keyValueContainer {
-    min-width: 40%;
+    min-width: 450px;
     max-width: fit-content;
     height: fit-content;
     background-color: var(--gray-100);

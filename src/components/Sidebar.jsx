@@ -7,7 +7,6 @@ const Sidebar = () => {
   const [selectedIndex, setSelectedIndex] = useState(false);
 
   const handleLinkClick = (index) => {
-      console.log(index);
       setSelectedIndex(index)
   }
 

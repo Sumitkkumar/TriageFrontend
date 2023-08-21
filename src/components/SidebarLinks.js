@@ -1,27 +1,28 @@
-import {BsFillBasketFill} from "react-icons/bs";
-import {RiAccountCircleFill} from "react-icons/ri";
-import {MdAnalytics} from "react-icons/md";
+import React from 'react';
+import { BsFillBasketFill } from 'react-icons/bs';
+import { RiAccountCircleFill } from 'react-icons/ri';
+import { MdAnalytics } from 'react-icons/md';
 
 export const SidebarLinks = [
     {
         index: 1,
-        title: "Get Order",
+        title: 'Get Order',
         icon: <BsFillBasketFill />,
-        link: "/getOrder",
-        selected: false
+        link: '/getOrder',
+        selected: false,
     },
     {
         index: 2,
-        title: "Analytics",
+        title: 'Analytics',
         icon: <MdAnalytics />,
-        link: "/analytics",
-        selected: false
+        link: '/analytics',
+        selected: false,
     },
     {
         index: 3,
-        title: "Account",
+        title: 'Account',
         icon: <RiAccountCircleFill />,
-        link: "/account",
-        selected: false
-    }
-]
+        link: '/account',
+        selected: false,
+    },
+];
