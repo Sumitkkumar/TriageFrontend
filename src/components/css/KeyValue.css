@@ -1,5 +1,6 @@
 .keyValueContainer {
-    width: 100%;
+    min-width: 40%;
+    max-width: fit-content;
     height: fit-content;
     background-color: var(--gray-100);
     border: 1px solid var(--gray-300);
@@ -7,6 +8,10 @@
     padding: 2rem;
     margin-top: 3rem;
     position: relative;
+}
+
+.keyValueContainer h4 {
+    margin-top: 1rem;
 }
 
 .keyValueContainer p {

@@ -36,7 +36,6 @@ body {
   min-height: 100vh; 
   background-color: var(--neutral-50);
   color: var(--gray-900);
-  overflow-x: hidden;
   display: flex;
 }
 

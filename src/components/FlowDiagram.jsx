@@ -19,13 +19,10 @@ const FlowDiagram = () => {
         }
     });
 
-    // paper.scale(1, 1);
-
     const nodes = [];
     data.dataflows.forEach((flow, index) => {
-        // console.log(index);
       const node = new joint.shapes.standard.Rectangle({
-        position: { x: (index+0.45) * 325, y: 75 },
+        position: { x: (index+0.15) * 300, y: 75 },
         size: { width: 225, height: 50 },
         attrs: {
           label: { 
