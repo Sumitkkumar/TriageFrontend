@@ -1,8 +1,13 @@
 .formContainer {
-    width: 100%;
+    width: 45%;
     margin-top: 1rem;
     margin-bottom: 1.5rem;
-    z-index: 2;
+}
+
+.formContainer form {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
 }
 
 .formContainer input {
@@ -15,8 +20,13 @@
     height: 40px;
     background-color: var(--gray-200);
     color: var(--gray-500);
-    padding-left: 0.75rem;
+    padding-left: 0.75rem;  
 }
+
+.formContainer input[type="date"]::-webkit-calendar-picker-indicator {
+    font-size: 1.35rem;
+    margin-right: 0.5rem;
+}  
 
 .formContainer input::placeholder {
     color: var(--gray-500);
@@ -31,7 +41,7 @@
 
 
 .formContainer button {
-    margin-left: 1rem;
+    /* margin-left: 1rem; */
     font-size: 0.95rem;
     font-family: 'Lato', sans-serif;
     border: none;

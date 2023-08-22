@@ -1,9 +1,8 @@
 import React, { useRef, useEffect } from 'react';
 import * as joint from 'jointjs';
-import data from './data.json';
 import * as colors from './colors';
 
-const FlowDiagram = () => {
+const FlowDiagram = ({jsonData}) => {
   const paperRef = useRef(null);
 
   useEffect(() => {
@@ -13,14 +12,17 @@ const FlowDiagram = () => {
       model: graph,
       width: '100%',
       height: 200,
+      drawGrid: true,
       gridSize: 1,
         background: {
             color: colors.neutral50
         }
     });
 
+    paper.translate(0,0);
+
     const nodes = [];
-    data.dataflows.forEach((flow, index) => {
+    jsonData.forEach((flow, index) => {
       const node = new joint.shapes.standard.Rectangle({
         position: { x: (index+0.15) * 300, y: 75 },
         size: { width: 225, height: 50 },
@@ -30,8 +32,8 @@ const FlowDiagram = () => {
                 fontFamily: 'Arial' 
             },
           body: {
-            fill: flow.failed === true ? colors.red300 : colors.gray200,
-            stroke: flow.failed === true ? colors.red600 : colors.gray400,
+            fill: flow.failed === "true" ? colors.red300 : colors.gray200,
+            stroke: flow.failed === "true" ? colors.red600 : colors.gray400,
             strokeWidth: 1,
           },
         },
@@ -78,7 +80,7 @@ const FlowDiagram = () => {
     //   node.position(position.x, position.y);
     // });
 
-  }, []);
+  }, [jsonData]);
 
   return (
     <div className='dataflowBox' ref={paperRef} ></div>

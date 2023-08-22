@@ -3,10 +3,10 @@ import React from 'react';
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
 import GetOrder from './components/GetOrder';
+import  Warehouse  from './components/Warehouse';
 import "./App.css"
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Analytics from './components/Analytics';
-import Account from './components/Account';
+import Inventory from './components/Inventory';
 
 function App() {
   return (
@@ -17,8 +17,8 @@ function App() {
             <Sidebar />
             <Routes>
               <Route path="/getOrder" element={<GetOrder />} />
-              <Route path="/analytics" element={<Analytics />} />
-              <Route path="/account" element={<Account />} />
+              <Route path="/inventoryStatus" element={<Inventory />} />
+              <Route path="/warehouse" element={<Warehouse />} />
             </Routes>
           </div>
       </div>

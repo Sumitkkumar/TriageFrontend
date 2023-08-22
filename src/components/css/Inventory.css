@@ -1,0 +1,23 @@
+/* .formContainer input[type="date"] {
+  position: relative;
+}
+
+.formContainer input[type="date"]::-webkit-calendar-picker-indicator {
+  margin-right: 0.25rem;
+  color: transparent;
+  background: none;
+}
+
+.formContainer input[type="date"]::before {
+  color: transparent;
+  background: none;
+  display: block;
+  font-family: "FontAwesome";
+  content: "AiFillCalendar";
+  width: 15px;
+  height: 20px;
+  position: absolute;
+  top: 12px;
+  right: 6px;
+  color: #999;
+} */
