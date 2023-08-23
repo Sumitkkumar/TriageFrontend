@@ -6,7 +6,6 @@
     width: 200px;
     background-color: var(--gray-100);
     border-right: 1px solid var(--gray-300);
-    color: var(--gray-700);
     z-index: 999;
   }
   
@@ -20,7 +19,7 @@
     display: flex;
     padding: 0.5rem 1.5rem;
     /* border: 1px solid coral; */
-    margin: 0.5rem 0.75rem;
+    /* margin: 0.5rem 0.75rem; */
   }
   
   .sidebar .icons {
@@ -30,24 +29,17 @@
   
   .sidebar ul li a {
     text-decoration: none;
+    color: var(--gray-700);
   }
   
   /* Hover States */
-  .sidebar ul li:hover{
+  .sidebar ul li:hover {
     cursor: pointer;
     background-color: var(--purple-200);
-    border-radius: 5px;
-  }
-  
-  .selected:active {
-    background-color: var(--purple-700);
-    border-radius: 5px;
-    color: var(--neutral-50);
   }
 
   .selected {
     background-color: var(--purple-700);
-    border-radius: 5px;
     color: var(--neutral-50);
     font-weight: 500;
   }
@@ -58,6 +50,7 @@
     color: var(--neutral-50);
   }
 
-  .selected-text {
+  /* .selected-text {
     color: var(--neutral-50);
-  }
+    text-decoration: dashed;
+  } */

@@ -58,10 +58,29 @@
     border:2px solid var(--green-600);
 }
 
+
+/* Table CSS */
+
 .tableContainer {
     margin-top: 2rem;
     z-index: 2;
     width: 100%;
+}
+
+.timestamp--wrapper {
+    display: flex;
+    /* align-items: center; */
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+
+.sortIcon {
+    font-size: 1.25rem;
+}
+
+.sortIcon:hover {
+    color: var(--purple-300);
 }
 
 .orderContentTable {
@@ -82,7 +101,7 @@
 
 .orderContentTable th, 
 .orderContentTable td {
-    padding: 15px 15px;
+    padding: 10px 15px;
 } 
 
 .orderContentTable tbody td {
@@ -101,6 +120,8 @@
     cursor: pointer;
     background-color: var(--purple-100);
 }
+
+/* Dataflow CSS */
 
 .dataflowContainer {
     width: 100%;

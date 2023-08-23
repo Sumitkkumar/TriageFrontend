@@ -3,9 +3,12 @@ import axios from "axios";
 import { useState } from "react";
 import "./css/GetOrder.css";
 import { RxCross2 } from "react-icons/rx";
+import {
+  AiOutlineSortAscending,
+  AiOutlineSortDescending,
+} from "react-icons/ai";
 
 const API_BASE_URL = "http://localhost:8080/api/inventory/data";
-
 
 const Inventory = () => {
   const [UPC, setUPC] = useState("");
@@ -16,6 +19,7 @@ const Inventory = () => {
   const [showMoreData, setShowMoreData] = useState(false);
   const [selectedDataIndex, setSelectedDataIndex] = useState(null);
   const [warehouseToRapiData, setWarehouseToRapiData] = useState("");
+  const [sortAscending, setSortAscending] = useState(true);
 
   const fetchData = async (upc, date) => {
     try {
@@ -32,7 +36,9 @@ const Inventory = () => {
 
   const fetchOrderData = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/api/order/disaa001");
+      const response = await axios.get(
+        "http://localhost:8080/api/order/disaa001"
+      );
       return response.data;
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -112,33 +118,69 @@ const Inventory = () => {
               <h2 className="pageSubHeadings">Table</h2>
               <table className="orderContentTable">
                 <thead>
-                  <tr >
+                  <tr>
                     <th>dataflowName</th>
                     <th>UPC</th>
                     <th>ConversationId</th>
                     <th>Quantity</th>
                     <th>Parent ConversationId</th>
-                    <th>Out_timestamp</th>
+                    <th>
+                      <div className="timestamp--wrapper">
+                        <p>out_timestamp</p>
+                        {sortAscending ? (
+                          <AiOutlineSortAscending
+                            className="sortIcon"
+                            onClick={() => setSortAscending(!sortAscending)}
+                          />
+                        ) : (
+                          <AiOutlineSortDescending
+                            className="sortIcon"
+                            onClick={() => setSortAscending(!sortAscending)}
+                          />
+                        )}
+                      </div>
+                    </th>
+                    <th>
+                      <div className="timestamp--wrapper">
+                        <p>in_timestamp</p>
+                        {sortAscending ? (
+                          <AiOutlineSortAscending
+                            className="sortIcon"
+                            onClick={() => setSortAscending(!sortAscending)}
+                          />
+                        ) : (
+                          <AiOutlineSortDescending
+                            className="sortIcon"
+                            onClick={() => setSortAscending(!sortAscending)}
+                          />
+                        )}
+                      </div>
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
                   {requestData != null ? (
-                    requestData.map((row, key) => (
-                      <tr key={key} onClick={() => displayMoreData(key)}>
-                        <td>{row.dataflowName}</td>
-                        <td>{UPC}</td>
-                        <td>{row.ConversationId}</td>
-                        <td>{row.Quantity}</td>
-                        <td>
-                          {row.Parent_ConversationId
-                            ? row.Parent_ConversationId
-                            : "null"}
-                        </td>
-                        <td>
-                          {row.Out_timestamp ? row.Out_timestamp : "null"}
-                        </td>
-                      </tr>
-                    ))
+                    [...requestData]
+                      .sort((a, b) => {
+                        const aDate = new Date(a.out_timestamp);
+                        const bDate = new Date(b.out_timestamp);
+                        return sortAscending ? aDate - bDate : bDate - aDate;
+                      })
+                      .map((row, key) => (
+                        <tr key={key} onClick={() => displayMoreData(key)}>
+                          <td>{row.dataflowName}</td>
+                          <td>{UPC}</td>
+                          <td>{row.ConversationId}</td>
+                          <td>{row.Quantity}</td>
+                          <td>
+                            {row["Parent ConversationId"]
+                              ? row["Parent ConversationId"]
+                              : "null"}
+                          </td>
+                          <td>{row.out_timestamp}</td>
+                          <td>{row.in_timestamp}</td>
+                        </tr>
+                      ))
                   ) : (
                     <p style={{ color: "red", fontWeight: 700 }}>
                       No data to be displayed.

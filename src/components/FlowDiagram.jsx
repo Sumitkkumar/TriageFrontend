@@ -1,13 +1,10 @@
 import React, { useRef, useEffect } from 'react';
 import * as joint from 'jointjs';
 import * as colors from './colors';
-import dagre from 'dagre'
+// import dagre from 'dagre'
 
 const FlowDiagram = ({jsonData}) => {
   const paperRef = useRef(null);
-  
-  const jsonDataSize = Object.keys(jsonData).length; 
-
   useEffect(() => {
     const graph = new joint.dia.Graph();
     const paper = new joint.dia.Paper({
