@@ -24,8 +24,8 @@ const FlowDiagram = ({jsonData}) => {
     const nodes = [];
     jsonData.forEach((flow, index) => {
       const node = new joint.shapes.standard.Rectangle({
-        position: { x: (index+0.15) * 300, y: 75 },
-        size: { width: 225, height: 50 },
+        position: { x: (index+0.075) * 300, y: 75 },
+        size: { width: 275, height: 50 },
         attrs: {
           label: { 
                 text: flow.dataflowName,
