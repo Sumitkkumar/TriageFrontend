@@ -1,5 +1,5 @@
 .formContainer {
-    width: 45%;
+    /* min-width: 300px; */
     margin-top: 1rem;
     margin-bottom: 1.5rem;
 }
@@ -7,7 +7,7 @@
 .formContainer form {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
+    gap: 1rem;
 }
 
 .formContainer input {
@@ -55,7 +55,7 @@
 
 .formContainer button:hover {
     background-color: #22c55e;
-    border:1px solid var(--green-600);
+    border:2px solid var(--green-600);
 }
 
 .tableContainer {

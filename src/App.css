@@ -46,7 +46,21 @@ nav {
   align-items: center;
   justify-content: center;
   position: fixed;
+  padding: 0 2rem;
   z-index: 9999;
+}
+
+.nav--wrapper {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 5rem;
+}
+
+.accenture--logo {
+  min-width: 100px;
+  max-width: 5%;
 }
 
 .contentContainer {

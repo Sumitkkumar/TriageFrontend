@@ -1,9 +1,12 @@
 import React, { useRef, useEffect } from 'react';
 import * as joint from 'jointjs';
 import * as colors from './colors';
+import dagre from 'dagre'
 
 const FlowDiagram = ({jsonData}) => {
   const paperRef = useRef(null);
+  
+  const jsonDataSize = Object.keys(jsonData).length; 
 
   useEffect(() => {
     const graph = new joint.dia.Graph();
@@ -14,17 +17,20 @@ const FlowDiagram = ({jsonData}) => {
       height: 200,
       drawGrid: true,
       gridSize: 1,
-        background: {
-            color: colors.neutral50
-        }
+      background: {
+        color: colors.neutral50
+      }
     });
 
-    paper.translate(0,0);
+    paper.translate(-200,0);
 
     const nodes = [];
-    jsonData.forEach((flow, index) => {
+    const nodesMap = new Map();
+    
+    
+    jsonData.forEach((flow) => {
       const node = new joint.shapes.standard.Rectangle({
-        position: { x: (index+0.075) * 300, y: 75 },
+        position: { x: (flow.position) * 300, y: 75 },
         size: { width: 275, height: 50 },
         attrs: {
           label: { 
@@ -40,24 +46,32 @@ const FlowDiagram = ({jsonData}) => {
       });
 
       nodes.push(node);
+
+      nodesMap.set(Number(flow.position), node);
       graph.addCell(node);
+      
     });
+    
+    
 
     for (let i = 0; i < nodes.length - 1; i++) {
-      const sourceNode = nodes[i];
-      const targetNode = nodes[i + 1];
+      const sourceNode = nodesMap.get(i+1);
+      const targetNode = nodesMap.get(i+2);
 
       const link = new joint.shapes.standard.Link({
         source: { id: sourceNode.id },
         target: { id: targetNode.id },
         attrs: {
           '.connection': { stroke: '#333', 'stroke-width': 3 },
-          '.marker-target': { d: 'M 10 0 L 0 5 L 10 10 z' },
+          // '.marker-target': { d: 'M 10 0 L 0 5 L 10 10 z' },
         },
       });
 
       graph.addCell(link);
     }
+
+    // console.log(nodesMap);
+    
 
     // const dagreLayout = new dagre.graphlib.Graph();
     // dagreLayout.setGraph({});
@@ -81,6 +95,7 @@ const FlowDiagram = ({jsonData}) => {
     // });
 
   }, [jsonData]);
+
 
   return (
     <div className='dataflowBox' ref={paperRef} ></div>

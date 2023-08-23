@@ -1,6 +1,5 @@
 import React from "react";
 import axios from "axios";
-import FlowDiagram from "./FlowDiagram";
 import { useState } from "react";
 import "./css/GetOrder.css";
 import { RxCross2 } from "react-icons/rx";
@@ -14,7 +13,6 @@ const Inventory = () => {
   const [requestData, setRequestData] = useState([]);
   const [orderData, setOrderData] = useState([]);
   const [tableVisible, setTableVisible] = useState(false);
-  const [dataflowVisible, setDataflowVisible] = useState(false);
   const [showMoreData, setShowMoreData] = useState(false);
   const [selectedDataIndex, setSelectedDataIndex] = useState(null);
   const [warehouseToRapiData, setWarehouseToRapiData] = useState("");
@@ -82,7 +80,6 @@ const Inventory = () => {
     if (data != null) {
       setOrderData(orderData);
       setRequestData(data);
-      setDataflowVisible(true);
       setTableVisible(true);
     } else {
       setRequestData(null);
@@ -109,14 +106,6 @@ const Inventory = () => {
             <button type="submit">Submit</button>
           </form>
         </div>
-        <div className="dataflowContainer">
-          {dataflowVisible && requestData ? (
-            <>
-              <h2 className="pageSubHeadings">Data Flow</h2>
-              <FlowDiagram jsonData = {requestData}/>
-            </>
-          ) : null}
-        </div>
         <div className="tableContainer">
           {tableVisible && (
             <>
@@ -125,6 +114,7 @@ const Inventory = () => {
                 <thead>
                   <tr >
                     <th>dataflowName</th>
+                    <th>UPC</th>
                     <th>ConversationId</th>
                     <th>Quantity</th>
                     <th>Parent ConversationId</th>
@@ -136,6 +126,7 @@ const Inventory = () => {
                     requestData.map((row, key) => (
                       <tr key={key} onClick={() => displayMoreData(key)}>
                         <td>{row.dataflowName}</td>
+                        <td>{UPC}</td>
                         <td>{row.ConversationId}</td>
                         <td>{row.Quantity}</td>
                         <td>
