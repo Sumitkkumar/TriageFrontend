@@ -3,7 +3,6 @@ import React from 'react';
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
 import GetOrder from './components/GetOrder';
-import  Warehouse  from './components/Warehouse';
 import "./App.css"
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Inventory from './components/Inventory';
@@ -18,7 +17,6 @@ function App() {
             <Routes>
               <Route path="/getOrder" element={<GetOrder />} />
               <Route path="/inventoryStatus" element={<Inventory />} />
-              <Route path="/warehouse" element={<Warehouse />} />
             </Routes>
           </div>
       </div>

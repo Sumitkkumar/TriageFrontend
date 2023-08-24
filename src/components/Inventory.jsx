@@ -3,23 +3,22 @@ import axios from "axios";
 import { useState } from "react";
 import "./css/GetOrder.css";
 import { RxCross2 } from "react-icons/rx";
-import {
-  AiOutlineSortAscending,
-  AiOutlineSortDescending,
-} from "react-icons/ai";
+import { ImSortAlphaDesc, ImSortAlphaAsc } from "react-icons/im";
 
-const API_BASE_URL = "http://localhost:8080/api/inventory/data";
+const API_BASE_URL = "http://localhost:8080/api/getInventory";
 
 const Inventory = () => {
   const [UPC, setUPC] = useState("");
   const [date, setDate] = useState();
   const [requestData, setRequestData] = useState([]);
-  const [orderData, setOrderData] = useState([]);
   const [tableVisible, setTableVisible] = useState(false);
   const [showMoreData, setShowMoreData] = useState(false);
+  const [sortedData, setSortedData] = useState([]);
   const [selectedDataIndex, setSelectedDataIndex] = useState(null);
-  const [warehouseToRapiData, setWarehouseToRapiData] = useState("");
-  const [sortAscending, setSortAscending] = useState(true);
+  const [sortInAsc, setSortInAsc] = useState(true);
+  const [sortOutAsc, setSortOutAsc] = useState(true);
+  const [sortQuantityAsc, setSortQuantityAsc] = useState(true);
+  const [toggleTableData, setToggleTableData] = useState(false);
 
   const fetchData = async (upc, date) => {
     try {
@@ -34,15 +33,35 @@ const Inventory = () => {
     }
   };
 
-  const fetchOrderData = async () => {
-    try {
-      const response = await axios.get(
-        "http://localhost:8080/api/order/disaa001"
+  const handleSort = (column) => {
+    setToggleTableData(true);
+    if (column === "in_timestamp") {
+      setSortedData(
+        [...requestData].sort((a, b) =>
+          sortInAsc
+            ? new Date(a[column]) - new Date(b[column])
+            : new Date(b[column]) - new Date(a[column])
+        )
       );
-      return response.data;
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      return null;
+      setSortInAsc(!sortInAsc);
+    } else if (column === "out_timestamp") {
+      setSortedData(
+        [...requestData].sort((a, b) =>
+          sortOutAsc
+            ? new Date(a[column]) - new Date(b[column])
+            : new Date(b[column]) - new Date(a[column])
+        )
+      );
+      setSortOutAsc(!sortOutAsc);
+    } else if (column === "quantity") {
+      setSortedData(
+        [...requestData].sort((a, b) =>
+          sortQuantityAsc
+            ? Number(a[column]) - Number(b[column])
+            : Number(b[column]) - Number(a[column])
+        )
+      );
+      setSortQuantityAsc(!sortQuantityAsc);
     }
   };
 
@@ -65,13 +84,6 @@ const Inventory = () => {
   const displayMoreData = async (key) => {
     setShowMoreData(true);
     setSelectedDataIndex(key);
-    const dataflowName = orderData[key].dataflowName;
-    const conversationId = orderData[key].conversationId;
-    let additionalData = await fetchAdditionalData(
-      dataflowName,
-      conversationId
-    );
-    setWarehouseToRapiData(additionalData);
   };
 
   const hideMoreData = () => {
@@ -81,10 +93,8 @@ const Inventory = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = await fetchData(UPC, date);
-    const orderData = await fetchOrderData();
 
     if (data != null) {
-      setOrderData(orderData);
       setRequestData(data);
       setTableVisible(true);
     } else {
@@ -122,36 +132,51 @@ const Inventory = () => {
                     <th>dataflowName</th>
                     <th>UPC</th>
                     <th>ConversationId</th>
-                    <th>Quantity</th>
-                    <th>Parent ConversationId</th>
                     <th>
-                      <div className="timestamp--wrapper">
-                        <p>out_timestamp</p>
-                        {sortAscending ? (
-                          <AiOutlineSortAscending
+                      <div className="th--wrapper">
+                        <p>Quantity</p>
+                        {sortInAsc ? (
+                          <ImSortAlphaAsc
                             className="sortIcon"
-                            onClick={() => setSortAscending(!sortAscending)}
+                            onClick={() => handleSort("quantity")}
                           />
                         ) : (
-                          <AiOutlineSortDescending
+                          <ImSortAlphaDesc
                             className="sortIcon"
-                            onClick={() => setSortAscending(!sortAscending)}
+                            onClick={() => handleSort("quantity")}
+                          />
+                        )}
+                      </div>
+                    </th>
+                    <th>Parent ConversationId</th>
+                    <th>
+                      <div className="th--wrapper">
+                        <p>in_timestamp</p>
+                        {sortInAsc ? (
+                          <ImSortAlphaAsc
+                            className="sortIcon"
+                            onClick={() => handleSort("in_timestamp")}
+                          />
+                        ) : (
+                          <ImSortAlphaDesc
+                            className="sortIcon"
+                            onClick={() => handleSort("in_timestamp")}
                           />
                         )}
                       </div>
                     </th>
                     <th>
-                      <div className="timestamp--wrapper">
-                        <p>in_timestamp</p>
-                        {sortAscending ? (
-                          <AiOutlineSortAscending
+                      <div className="th--wrapper">
+                        <p>out_timestamp</p>
+                        {sortOutAsc ? (
+                          <ImSortAlphaAsc
                             className="sortIcon"
-                            onClick={() => setSortAscending(!sortAscending)}
+                            onClick={() => handleSort("out_timestamp")}
                           />
                         ) : (
-                          <AiOutlineSortDescending
+                          <ImSortAlphaDesc
                             className="sortIcon"
-                            onClick={() => setSortAscending(!sortAscending)}
+                            onClick={() => handleSort("out_timestamp")}
                           />
                         )}
                       </div>
@@ -160,27 +185,39 @@ const Inventory = () => {
                 </thead>
                 <tbody>
                   {requestData != null ? (
-                    [...requestData]
-                      .sort((a, b) => {
-                        const aDate = new Date(a.out_timestamp);
-                        const bDate = new Date(b.out_timestamp);
-                        return sortAscending ? aDate - bDate : bDate - aDate;
-                      })
-                      .map((row, key) => (
+                    toggleTableData ? (
+                      sortedData.map((row, key) => (
                         <tr key={key} onClick={() => displayMoreData(key)}>
                           <td>{row.dataflowName}</td>
                           <td>{UPC}</td>
                           <td>{row.ConversationId}</td>
-                          <td>{row.Quantity}</td>
+                          <td>{row.quantity}</td>
                           <td>
                             {row["Parent ConversationId"]
                               ? row["Parent ConversationId"]
                               : "null"}
                           </td>
-                          <td>{row.out_timestamp}</td>
                           <td>{row.in_timestamp}</td>
+                          <td>{row.out_timestamp}</td>
                         </tr>
                       ))
+                    ) : (
+                      requestData.map((row, key) => (
+                        <tr key={key} onClick={() => displayMoreData(key)}>
+                          <td>{row.dataflowName}</td>
+                          <td>{UPC}</td>
+                          <td>{row.ConversationId}</td>
+                          <td>{row.quantity}</td>
+                          <td>
+                            {row["Parent ConversationId"]
+                              ? row["Parent ConversationId"]
+                              : "null"}
+                          </td>
+                          <td>{row.in_timestamp}</td>
+                          <td>{row.out_timestamp}</td>
+                        </tr>
+                      ))
+                    )
                   ) : (
                     <p style={{ color: "red", fontWeight: 700 }}>
                       No data to be displayed.
@@ -195,7 +232,6 @@ const Inventory = () => {
                       {requestData[selectedDataIndex].dataflowName}
                     </span>
                     <h4>wareHouseToRapi</h4>
-                    <p>{warehouseToRapiData}</p>
                     <span className="close">
                       <RxCross2 onClick={hideMoreData} />
                     </span>

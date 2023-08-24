@@ -1,7 +1,6 @@
 import React from 'react';
 import { BsFillBasketFill } from 'react-icons/bs';
 import { MdOutlineInventory } from 'react-icons/md';
-import { FaWarehouse } from 'react-icons/fa';
 
 export const SidebarLinks = [
     {
@@ -15,11 +14,5 @@ export const SidebarLinks = [
         title: 'Inventory',
         icon: <MdOutlineInventory />,
         link: '/inventoryStatus'
-    },
-    {
-        index: 3,
-        title: 'Warehouse',
-        icon: <FaWarehouse />,
-        link: '/warehouse'
     },
 ];

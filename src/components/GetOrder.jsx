@@ -5,23 +5,22 @@ import FlowDiagram from "./FlowDiagram";
 import "./css/KeyValue.css";
 import axios from "axios";
 import { RxCross2 } from "react-icons/rx";
-import {
-  AiOutlineSortAscending,
-  AiOutlineSortDescending,
-} from "react-icons/ai";
+import { ImSortAlphaDesc, ImSortAlphaAsc } from "react-icons/im";
 
-const API_BASE_URL = "http://localhost:8080/api/order/";
+const API_BASE_URL = "http://localhost:8080/api/getOrder/";
 
 const GetOrder = () => {
   const [orderId, setOrderId] = useState("");
-  const [tableData, setTableData] = useState([]);
   const [tableVisible, setTableVisible] = useState(false);
   const [dataflowVisible, setDataflowVisible] = useState(false);
   const [showMoreData, setShowMoreData] = useState(false);
   const [selectedDataIndex, setSelectedDataIndex] = useState(null);
   const [requestData, setRequestData] = useState([]);
+  const [sortedData, setSortedData] = useState([]);
   const [warehouseToRapiData, setWarehouseToRapiData] = useState("");
-  const [sortAscending, setSortAscending] = useState(true);
+  const [sortInAsc, setSortInAsc] = useState(true);
+  const [sortOutAsc, setSortOutAsc] = useState(true);
+  const [toggleTableData, setToggleTableData] = useState(false);
 
   const fetchData = async (url) => {
     try {
@@ -30,6 +29,29 @@ const GetOrder = () => {
     } catch (error) {
       console.error("Error fetching data:", error);
       return null;
+    }
+  };
+
+  const handleSort = (column) => {
+    setToggleTableData(true);
+    if (column === "inTimestamp") {
+      setSortedData(
+        [...requestData].sort((a, b) =>
+          sortInAsc
+            ? new Date(a[column]) - new Date(b[column])
+            : new Date(b[column]) - new Date(a[column])
+        )
+      );
+      setSortInAsc(!sortInAsc);
+    } else if (column === "outTimestamp") {
+      setSortedData(
+        [...requestData].sort((a, b) =>
+          sortOutAsc
+            ? new Date(a[column]) - new Date(b[column])
+            : new Date(b[column]) - new Date(a[column])
+        )
+      );
+      setSortOutAsc(!sortOutAsc);
     }
   };
 
@@ -52,13 +74,6 @@ const GetOrder = () => {
   const displayMoreData = async (key) => {
     setShowMoreData(true);
     setSelectedDataIndex(key);
-    const dataflowName = tableData[key].dataflowName;
-    const conversationId = tableData[key].conversationId;
-    let additionalData = await fetchAdditionalData(
-      dataflowName,
-      conversationId
-    );
-    setWarehouseToRapiData(additionalData);
   };
 
   const hideMoreData = () => {
@@ -73,11 +88,9 @@ const GetOrder = () => {
     if (orderId.match(validOrderId)) {
       const data = await fetchData(API_BASE_URL + orderId);
       if (data) {
-        setTableData(data);
         setRequestData(data);
       }
     } else {
-      setTableData([]);
       setRequestData([]);
     }
     setTableVisible(true);
@@ -100,7 +113,7 @@ const GetOrder = () => {
           </form>
         </div>
         <div className="dataflowContainer">
-          {dataflowVisible && tableData ? (
+          {dataflowVisible && requestData ? (
             <>
               <h2 className="pageSubHeadings">Data Flow</h2>
               <FlowDiagram jsonData={requestData} />
@@ -122,80 +135,68 @@ const GetOrder = () => {
                     <th>conversationId</th>
                     <th>failed</th>
                     <th>
-                      <div className="timestamp--wrapper">
+                      <div className="th--wrapper">
                         <p>inTimestamp</p>
-                        {sortAscending ? (
-                          <AiOutlineSortAscending
+                        {sortInAsc ? (
+                          <ImSortAlphaAsc
                             className="sortIcon"
-                            onClick={() => setSortAscending(!sortAscending)}
+                            onClick={() => handleSort("inTimestamp")}
                           />
                         ) : (
-                          <AiOutlineSortDescending
+                          <ImSortAlphaDesc
                             className="sortIcon"
-                            onClick={() => setSortAscending(!sortAscending)}
+                            onClick={() => handleSort("inTimestamp")}
                           />
                         )}
                       </div>
                     </th>
                     <th>
-                      <div className="timestamp--wrapper">
+                      <div className="th--wrapper">
                         <p>outTimestamp</p>
-                        {sortAscending ? (
-                          <AiOutlineSortAscending
+                        {sortOutAsc ? (
+                          <ImSortAlphaAsc
                             className="sortIcon"
-                            onClick={() => setSortAscending(!sortAscending)}
+                            onClick={() => handleSort("outTimestamp")}
                           />
                         ) : (
-                          <AiOutlineSortDescending
+                          <ImSortAlphaDesc
                             className="sortIcon"
-                            onClick={() => setSortAscending(!sortAscending)}
+                            onClick={() => handleSort("outTimestamp")}
                           />
                         )}
                       </div>
                     </th>
-                    {/* <div className="timestamp--wrapper">
-                      <th>outTimestamp</th>
-                      {sortAscending ? (
-                        <AiOutlineSortAscending
-                          className="sortIcon"
-                          onClick={() => setSortAscending(!sortAscending)}
-                        />
-                      ) : (
-                        <AiOutlineSortDescending
-                          className="sortIcon"
-                          onClick={() => setSortAscending(!sortAscending)}
-                        />
-                      )}
-                    </div> */}
                   </tr>
                 </thead>
                 <tbody>
-                  {tableData != null ? (
-                    [...tableData]
-                      .sort((a, b) => {
-                        const aDate = new Date(a.inTimestamp);
-                        const bDate = new Date(b.inTimestamp);
-                        return sortAscending ? aDate - bDate : bDate - aDate;
-                      })
-                      .map((row, key) => (
+                  {requestData != null ? (
+                    toggleTableData ? (
+                      sortedData.map((row, key) => (
                         <tr key={key} onClick={() => displayMoreData(key)}>
                           <td>{row.dataflowName}</td>
                           <td>{row.triggered}</td>
                           <td>{row.rapiToWareHouse}</td>
-                          <td>
-                            {row.wareHouseToRapi === "Success" ||
-                            row.wareHouseToRapi === "No" ? (
-                              row.wareHouseToRapi
-                            ) : (
-                              <p className="showMoreBtn">Show More</p>
-                            )}
-                          </td>
+                          <td>{row.wareHouseToRapi}</td>
                           <td>{row.conversationId}</td>
                           <td>{row.failed}</td>
                           <td>{row.inTimestamp}</td>
                           <td>{row.outTimestamp}</td>
                         </tr>
                       ))
+                    ) : (
+                      requestData.map((row, key) => (
+                        <tr key={key} onClick={() => displayMoreData(key)}>
+                          <td>{row.dataflowName}</td>
+                          <td>{row.triggered}</td>
+                          <td>{row.rapiToWareHouse}</td>
+                          <td>{row.wareHouseToRapi}</td>
+                          <td>{row.conversationId}</td>
+                          <td>{row.failed}</td>
+                          <td>{row.inTimestamp}</td>
+                          <td>{row.outTimestamp}</td>
+                        </tr>
+                      ))
+                    )
                   ) : (
                     <p style={{ color: "red", fontWeight: 700 }}>
                       No data to be displayed.

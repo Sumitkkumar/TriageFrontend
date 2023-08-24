@@ -51,7 +51,7 @@ nav {
 }
 
 .nav--wrapper {
-  width: 100%;
+  width: calc(50% + 5.672rem);
   display: flex;
   align-items: center;
   justify-content: space-between;
