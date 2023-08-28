@@ -5,7 +5,7 @@ import "./css/GetOrder.css";
 import { RxCross2 } from "react-icons/rx";
 import { ImSortAlphaDesc, ImSortAlphaAsc } from "react-icons/im";
 
-const API_BASE_URL = "http://localhost:8080/api/getInventory";
+const API_BASE_URL = "http://localhost:8081/api/getInventory";
 
 const Inventory = () => {
   const [UPC, setUPC] = useState("");

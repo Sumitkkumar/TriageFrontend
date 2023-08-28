@@ -1,36 +1,28 @@
 import React from "react";
-import "./css/GetOrder.css";
 import { useState } from "react";
-import FlowDiagram from "./FlowDiagram";
+import "./css/GetOrder.css";
 import "./css/KeyValue.css";
+import FlowDiagram from "./FlowDiagram";
+import fetchData from "../utils/functions/fetchData";
 import axios from "axios";
 import { RxCross2 } from "react-icons/rx";
+import TraceEvents from "./TraceEvents";
 import { ImSortAlphaDesc, ImSortAlphaAsc } from "react-icons/im";
-
-const API_BASE_URL = "http://localhost:8080/api/getOrder/";
+import { ORDER_DATA_URL, TRACE_EVENTS_DATA } from "../utils/API_URLs";
 
 const GetOrder = () => {
   const [orderId, setOrderId] = useState("");
-  const [tableVisible, setTableVisible] = useState(false);
-  const [dataflowVisible, setDataflowVisible] = useState(false);
-  const [showMoreData, setShowMoreData] = useState(false);
+  const [showContent, setShowContent] = useState(false);
+  const [showTraceData, setShowTraceData] = useState(false);
   const [selectedDataIndex, setSelectedDataIndex] = useState(null);
+
   const [requestData, setRequestData] = useState([]);
   const [sortedData, setSortedData] = useState([]);
-  const [warehouseToRapiData, setWarehouseToRapiData] = useState("");
+  const [traceEventsData, setTraceEventsData] = useState([]);
+
   const [sortInAsc, setSortInAsc] = useState(true);
   const [sortOutAsc, setSortOutAsc] = useState(true);
   const [toggleTableData, setToggleTableData] = useState(false);
-
-  const fetchData = async (url) => {
-    try {
-      const response = await axios.get(url);
-      return response.data;
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      return null;
-    }
-  };
 
   const handleSort = (column) => {
     setToggleTableData(true);
@@ -55,29 +47,36 @@ const GetOrder = () => {
     }
   };
 
-  const fetchAdditionalData = async (dataflowName, conversationId) => {
-    const additionalDataUrl =
-      "http://localhost:8080/api/order/warehouse-to-rapi";
-
+  const postData = async (url, jobName, conversationId) => {
     try {
-      const response = await axios.post(additionalDataUrl, {
-        dataflowName: dataflowName,
+      const response = await axios.post(url, {
+        jobName: jobName,
         conversationId: conversationId,
       });
       return response.data;
     } catch (error) {
-      console.error("Error fetching additional data:", error);
+      console.error("Error fetching data:", error);
       return null;
     }
   };
 
-  const displayMoreData = async (key) => {
-    setShowMoreData(true);
+  const displayTraceEventsData = async (key) => {
+    setShowTraceData(true);
     setSelectedDataIndex(key);
+    try {
+      const jobName = requestData[key].dataflowName;
+      const conversationId = requestData[key].conversationId;
+      const data = await postData(TRACE_EVENTS_DATA, jobName, conversationId);
+      // console.log(data);
+      setTraceEventsData(data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      return null;
+    }
   };
 
-  const hideMoreData = () => {
-    setShowMoreData(false);
+  const hideTraceEventsData = () => {
+    setShowTraceData(false);
   };
 
   const handleSubmit = async (event) => {
@@ -86,15 +85,14 @@ const GetOrder = () => {
     const validOrderId = "disaa001";
 
     if (orderId.match(validOrderId)) {
-      const data = await fetchData(API_BASE_URL + orderId);
+      const data = await fetchData(ORDER_DATA_URL + orderId);
       if (data) {
         setRequestData(data);
       }
     } else {
       setRequestData([]);
     }
-    setTableVisible(true);
-    setDataflowVisible(true);
+    setShowContent(true);
   };
 
   return (
@@ -112,8 +110,11 @@ const GetOrder = () => {
             <button type="submit">Submit</button>
           </form>
         </div>
+
+        {/* DATAFLOW CONTAINER */}
+
         <div className="dataflowContainer">
-          {dataflowVisible && requestData ? (
+          {showContent && requestData ? (
             <>
               <h2 className="pageSubHeadings">Data Flow</h2>
               <FlowDiagram jsonData={requestData} />
@@ -121,8 +122,10 @@ const GetOrder = () => {
           ) : null}
         </div>
 
+        {/* TABLE CONTAINER */}
+
         <div className="tableContainer">
-          {tableVisible && (
+          {showContent && (
             <>
               <h2 className="pageSubHeadings">Table</h2>
               <table className="orderContentTable">
@@ -172,7 +175,10 @@ const GetOrder = () => {
                   {requestData != null ? (
                     toggleTableData ? (
                       sortedData.map((row, key) => (
-                        <tr key={key} onClick={() => displayMoreData(key)}>
+                        <tr
+                          key={key}
+                          onClick={() => displayTraceEventsData(key)}
+                        >
                           <td>{row.dataflowName}</td>
                           <td>{row.triggered}</td>
                           <td>{row.rapiToWareHouse}</td>
@@ -185,7 +191,10 @@ const GetOrder = () => {
                       ))
                     ) : (
                       requestData.map((row, key) => (
-                        <tr key={key} onClick={() => displayMoreData(key)}>
+                        <tr
+                          key={key}
+                          onClick={() => displayTraceEventsData(key)}
+                        >
                           <td>{row.dataflowName}</td>
                           <td>{row.triggered}</td>
                           <td>{row.rapiToWareHouse}</td>
@@ -204,23 +213,25 @@ const GetOrder = () => {
                   )}
                 </tbody>
               </table>
-              <>
-                {showMoreData && (
-                  <div className="keyValueContainer">
-                    <span className="pageSubHeadings">
-                      {requestData[selectedDataIndex].dataflowName}
-                    </span>
-                    <h4>wareHouseToRapi</h4>
-                    <p>{warehouseToRapiData}</p>
-                    <span className="close">
-                      <RxCross2 onClick={hideMoreData} />
-                    </span>
-                  </div>
-                )}
-              </>
+
+              {/* ADDITIONAL TABLE CONTAINER */}
             </>
           )}
         </div>
+        <>
+          {showTraceData && (
+            <div>
+              <h2 className="pageSubHeadings">
+                {requestData[selectedDataIndex].dataflowName}
+              </h2>
+              <span className="close">
+                <RxCross2 onClick={hideTraceEventsData} />
+              </span>
+              <h4>TraceEventsData</h4>
+              <TraceEvents data={traceEventsData} />
+            </div>
+          )}
+        </>
       </div>
     </section>
   );

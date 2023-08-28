@@ -1,30 +1,35 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 
-const useFetch = (URL) => {
-  const [data, setData] = useState(null);
+const useFetch = (url, shouldFetch) => {
+  const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    setLoading(true);
-    axios
-      .get(URL)
-      .then((response) => {
-        response.json();
-      })
-      .then((response) => {
-        setData(response.data);
-      })
-      .catch((err) => {
-        setError(err);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, [URL]);
+    if (shouldFetch) {
+      setLoading(true);
 
-  return { data, loading, error};
+      const fetchData = async () => {
+        try {
+          const response = await fetch(url);
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          const jsonData = await response.json();
+          setData(jsonData);
+          setLoading(false);
+          console.log(jsonData);
+        } catch (error) {
+          setError(error);
+          setLoading(false);
+        }
+      };
+
+      fetchData();
+    }
+  }, [url, shouldFetch]);
+
+  return { data, loading, error };
 };
 
 export default useFetch;

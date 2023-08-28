@@ -1,7 +1,5 @@
 .keyValueContainer {
-    width: 100vw;
-
-    max-width: fit-content;
+    width: fit-content;
     height: fit-content;
     background-color: var(--gray-100);
     border: 1px solid var(--gray-300);
