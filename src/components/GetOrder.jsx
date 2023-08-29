@@ -5,7 +5,7 @@ import "./css/KeyValue.css";
 import FlowDiagram from "./FlowDiagram";
 import fetchData from "../utils/functions/fetchData";
 import axios from "axios";
-import { RxCross2 } from "react-icons/rx";
+// import { RxCross2 } from "react-icons/rx";
 import TraceEvents from "./TraceEvents";
 import { ImSortAlphaDesc, ImSortAlphaAsc } from "react-icons/im";
 import { ORDER_DATA_URL, TRACE_EVENTS_DATA } from "../utils/API_URLs";
@@ -73,10 +73,6 @@ const GetOrder = () => {
       console.error("Error fetching data:", error);
       return null;
     }
-  };
-
-  const hideTraceEventsData = () => {
-    setShowTraceData(false);
   };
 
   const handleSubmit = async (event) => {
@@ -224,9 +220,6 @@ const GetOrder = () => {
               <h2 className="pageSubHeadings">
                 {requestData[selectedDataIndex].dataflowName}
               </h2>
-              <span className="close">
-                <RxCross2 onClick={hideTraceEventsData} />
-              </span>
               <h4>TraceEventsData</h4>
               <TraceEvents data={traceEventsData} />
             </div>

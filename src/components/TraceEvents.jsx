@@ -1,16 +1,17 @@
 import React, { useState } from "react";
-import ModalOverlay from "./ModalOverlay";
 import axios from "axios";
 import { PAYLOAD_DATA } from "../utils/API_URLs";
+import "./css/Modal.css";
+import Modal from "./Modal";
 
 const TraceEvents = ({ data }) => {
-  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUrl, setSelectedUrl] = useState("");
   const [jsonData, setJsonData] = useState(null);
 
   const handleUrlClick = async (url) => {
     setSelectedUrl(url);
-    setModalIsOpen(true);
+    setIsModalOpen(true);
     try {
       const response = await axios.post(PAYLOAD_DATA, {
         payloadUrl: url,
@@ -20,12 +21,12 @@ const TraceEvents = ({ data }) => {
     } catch (error) {
       console.error("Error fetching JSON data:", error);
     }
+    window.scrollTo({
+      top: 0,
+      behavior: "auto", // This adds a smooth scroll animation
+    });
   };
 
-  const closeModal = () => {
-    setModalIsOpen(false);
-    setSelectedUrl("");
-  };
   return (
     <>
       <table className="orderContentTable">
@@ -41,14 +42,8 @@ const TraceEvents = ({ data }) => {
               <tr key={index + "-" + idx}>
                 <td>{tag}</td>
                 <td>
-                  <a href={url} onClick={() => handleUrlClick(url)}>
+                  <a href={selectedUrl} onClick={() => handleUrlClick(url)}>
                     {url}
-                    <ModalOverlay
-                      isOpen={modalIsOpen}
-                      closeModal={closeModal}
-                      url={selectedUrl}
-                      data={jsonData}
-                    />
                   </a>
                 </td>
               </tr>
@@ -56,6 +51,13 @@ const TraceEvents = ({ data }) => {
           )}
         </tbody>
       </table>
+      {
+        <Modal
+          isOpen={isModalOpen}
+          setIsOpen={setIsModalOpen}
+          data={jsonData}
+        />
+      }
     </>
   );
 };

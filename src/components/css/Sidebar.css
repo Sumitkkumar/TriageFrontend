@@ -6,7 +6,7 @@
     width: 200px;
     background-color: var(--gray-100);
     border-right: 1px solid var(--gray-300);
-    z-index: 999;
+    z-index: 1;
   }
   
   .sidebar ul {
