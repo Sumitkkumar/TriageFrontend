@@ -3,7 +3,7 @@ import { useState } from "react";
 import "./css/GetOrder.css";
 import "./css/KeyValue.css";
 import FlowDiagram from "./FlowDiagram";
-import fetchData from "../utils/functions/fetchData";
+import fetchData from "../utils/helpers/fetchData";
 import axios from "axios";
 // import { RxCross2 } from "react-icons/rx";
 import TraceEvents from "./TraceEvents";
@@ -13,11 +13,11 @@ import { ORDER_DATA_URL, TRACE_EVENTS_DATA } from "../utils/API_URLs";
 const GetOrder = () => {
   const [orderId, setOrderId] = useState("");
   const [showContent, setShowContent] = useState(false);
-  const [showTraceData, setShowTraceData] = useState(false);
   const [selectedDataIndex, setSelectedDataIndex] = useState(null);
-
+  
   const [requestData, setRequestData] = useState([]);
   const [sortedData, setSortedData] = useState([]);
+  const [showTraceData, setShowTraceData] = useState(false);
   const [traceEventsData, setTraceEventsData] = useState([]);
 
   const [sortInAsc, setSortInAsc] = useState(true);
@@ -127,15 +127,15 @@ const GetOrder = () => {
               <table className="orderContentTable">
                 <thead>
                   <tr>
-                    <th>dataflowName</th>
-                    <th>triggered</th>
-                    <th>rapiToWareHouse</th>
-                    <th>wareHouseToRapi</th>
-                    <th>conversationId</th>
-                    <th>failed</th>
+                    <th>Dataflow Name</th>
+                    <th>Triggered</th>
+                    <th>RapiToWareHouse</th>
+                    <th>Warehouse To Rapi</th>
+                    <th>Conversation Id</th>
+                    <th>Failed</th>
                     <th>
                       <div className="th--wrapper">
-                        <p>inTimestamp</p>
+                        <p>In Timestamp</p>
                         {sortInAsc ? (
                           <ImSortAlphaAsc
                             className="sortIcon"
@@ -151,7 +151,7 @@ const GetOrder = () => {
                     </th>
                     <th>
                       <div className="th--wrapper">
-                        <p>outTimestamp</p>
+                        <p>Out Timestamp</p>
                         {sortOutAsc ? (
                           <ImSortAlphaAsc
                             className="sortIcon"
@@ -175,7 +175,7 @@ const GetOrder = () => {
                           key={key}
                           onClick={() => displayTraceEventsData(key)}
                         >
-                          <td>{row.dataflowName}</td>
+                          <td>{row.dataflowName.toUpperCase()}</td>
                           <td>{row.triggered}</td>
                           <td>{row.rapiToWareHouse}</td>
                           <td>{row.wareHouseToRapi}</td>
@@ -191,7 +191,7 @@ const GetOrder = () => {
                           key={key}
                           onClick={() => displayTraceEventsData(key)}
                         >
-                          <td>{row.dataflowName}</td>
+                          <td>{row.dataflowName.toUpperCase()}</td>
                           <td>{row.triggered}</td>
                           <td>{row.rapiToWareHouse}</td>
                           <td>{row.wareHouseToRapi}</td>

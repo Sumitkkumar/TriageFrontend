@@ -3,6 +3,9 @@ import axios from "axios";
 import { useState } from "react";
 import "./css/GetOrder.css";
 import { RxCross2 } from "react-icons/rx";
+import { postData } from "../utils/helpers/postData";
+import TraceEvents from "./TraceEvents";
+import { TRACE_EVENTS_DATA } from "../utils/API_URLs";
 import { ImSortAlphaDesc, ImSortAlphaAsc } from "react-icons/im";
 
 const API_BASE_URL = "http://localhost:8081/api/getInventory";
@@ -10,11 +13,14 @@ const API_BASE_URL = "http://localhost:8081/api/getInventory";
 const Inventory = () => {
   const [UPC, setUPC] = useState("");
   const [date, setDate] = useState();
-  const [requestData, setRequestData] = useState([]);
   const [tableVisible, setTableVisible] = useState(false);
-  const [showMoreData, setShowMoreData] = useState(false);
-  const [sortedData, setSortedData] = useState([]);
+  const [showTraceData, setShowTraceData] = useState(false);
   const [selectedDataIndex, setSelectedDataIndex] = useState(null);
+
+  const [sortedData, setSortedData] = useState([]);
+  const [requestData, setRequestData] = useState([]);
+  const [traceEventsData, setTraceEventsData] = useState([]);
+  
   const [sortInAsc, setSortInAsc] = useState(true);
   const [sortOutAsc, setSortOutAsc] = useState(true);
   const [sortQuantityAsc, setSortQuantityAsc] = useState(true);
@@ -65,31 +71,21 @@ const Inventory = () => {
     }
   };
 
-  const fetchAdditionalData = async (dataflowName, conversationId) => {
-    const additionalDataUrl =
-      "http://localhost:8080/api/order/warehouse-to-rapi";
-
+  const displayTraceEventsData = async (key) => {
+    setShowTraceData(true);
+    setSelectedDataIndex(key);
     try {
-      const response = await axios.post(additionalDataUrl, {
-        dataflowName: dataflowName,
-        conversationId: conversationId,
-      });
-      return response.data;
+      const jobName = requestData[key].dataflowName;
+      const conversationId = requestData[key].ConversationId;
+      const data = await postData(TRACE_EVENTS_DATA, jobName, conversationId);
+      setTraceEventsData(data);
     } catch (error) {
-      console.error("Error fetching additional data:", error);
+      console.error("Error fetching data:", error);
       return null;
     }
   };
 
-  const displayMoreData = async (key) => {
-    setShowMoreData(true);
-    setSelectedDataIndex(key);
-  };
-
-  const hideMoreData = () => {
-    setShowMoreData(false);
-  };
-
+  
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = await fetchData(UPC, date);
@@ -98,7 +94,7 @@ const Inventory = () => {
       setRequestData(data);
       setTableVisible(true);
     } else {
-      setRequestData(null);
+      setRequestData([]);
     }
   };
 
@@ -187,8 +183,11 @@ const Inventory = () => {
                   {requestData != null ? (
                     toggleTableData ? (
                       sortedData.map((row, key) => (
-                        <tr key={key} onClick={() => displayMoreData(key)}>
-                          <td>{row.dataflowName}</td>
+                        <tr
+                          key={key}
+                          onClick={() => displayTraceEventsData(key)}
+                        >
+                          <td>{row.dataflowName.toUpperCase()}</td>
                           <td>{UPC}</td>
                           <td>{row.ConversationId}</td>
                           <td>{row.quantity}</td>
@@ -203,8 +202,11 @@ const Inventory = () => {
                       ))
                     ) : (
                       requestData.map((row, key) => (
-                        <tr key={key} onClick={() => displayMoreData(key)}>
-                          <td>{row.dataflowName}</td>
+                        <tr
+                          key={key}
+                          onClick={() => displayTraceEventsData(key)}
+                        >
+                          <td>{row.dataflowName.toUpperCase()}</td>
                           <td>{UPC}</td>
                           <td>{row.ConversationId}</td>
                           <td>{row.quantity}</td>
@@ -225,22 +227,20 @@ const Inventory = () => {
                   )}
                 </tbody>
               </table>
-              <>
-                {showMoreData && (
-                  <div className="keyValueContainer">
-                    <span className="pageSubHeadings">
-                      {requestData[selectedDataIndex].dataflowName}
-                    </span>
-                    <h4>wareHouseToRapi</h4>
-                    <span className="close">
-                      <RxCross2 onClick={hideMoreData} />
-                    </span>
-                  </div>
-                )}
-              </>
             </>
           )}
         </div>
+        <>
+          {showTraceData && (
+            <div>
+              <h2 className="pageSubHeadings">
+                {requestData[selectedDataIndex].dataflowName}
+              </h2>
+              <h4>TraceEventsData</h4>
+              <TraceEvents data={traceEventsData} />
+            </div>
+          )}
+        </>
       </div>
     </section>
   );

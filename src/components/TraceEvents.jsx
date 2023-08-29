@@ -42,7 +42,7 @@ const TraceEvents = ({ data }) => {
               <tr key={index + "-" + idx}>
                 <td>{tag}</td>
                 <td>
-                  <a href={selectedUrl} onClick={() => handleUrlClick(url)}>
+                  <a href="#" onClick={() => handleUrlClick(url)}>
                     {url}
                   </a>
                 </td>
