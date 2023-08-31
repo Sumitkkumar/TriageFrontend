@@ -17,6 +17,7 @@
   
   .sidebar ul li{
     display: flex;
+    text-decoration: none;
     padding: 0.5rem 1.5rem;
     /* border: 1px solid coral; */
     /* margin: 0.5rem 0.75rem; */
@@ -27,7 +28,7 @@
     padding-right: 1rem;
   }
   
-  .sidebar ul li a {
+  .sidebar ul a {
     text-decoration: none;
     color: var(--gray-700);
   }
@@ -41,6 +42,7 @@
   .selected {
     background-color: var(--purple-700);
     color: var(--neutral-50);
+    text-decoration: none;
     font-weight: 500;
   }
 

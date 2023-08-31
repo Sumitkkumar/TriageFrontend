@@ -5,6 +5,7 @@ import "./css/KeyValue.css";
 import FlowDiagram from "./FlowDiagram";
 import fetchData from "../utils/helpers/fetchData";
 import axios from "axios";
+import { postData } from "../utils/helpers/postData";
 // import { RxCross2 } from "react-icons/rx";
 import TraceEvents from "./TraceEvents";
 import { ImSortAlphaDesc, ImSortAlphaAsc } from "react-icons/im";
@@ -14,7 +15,7 @@ const GetOrder = () => {
   const [orderId, setOrderId] = useState("");
   const [showContent, setShowContent] = useState(false);
   const [selectedDataIndex, setSelectedDataIndex] = useState(null);
-  
+
   const [requestData, setRequestData] = useState([]);
   const [sortedData, setSortedData] = useState([]);
   const [showTraceData, setShowTraceData] = useState(false);
@@ -47,27 +48,16 @@ const GetOrder = () => {
     }
   };
 
-  const postData = async (url, jobName, conversationId) => {
-    try {
-      const response = await axios.post(url, {
-        jobName: jobName,
-        conversationId: conversationId,
-      });
-      return response.data;
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      return null;
-    }
-  };
-
   const displayTraceEventsData = async (key) => {
     setShowTraceData(true);
     setSelectedDataIndex(key);
     try {
       const jobName = requestData[key].dataflowName;
       const conversationId = requestData[key].conversationId;
-      const data = await postData(TRACE_EVENTS_DATA, jobName, conversationId);
-      // console.log(data);
+      const data = await postData(TRACE_EVENTS_DATA, {
+        jobName: jobName,
+        conversationId: conversationId
+      });
       setTraceEventsData(data);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -78,13 +68,9 @@ const GetOrder = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const validOrderId = "disaa001";
-
-    if (orderId.match(validOrderId)) {
-      const data = await fetchData(ORDER_DATA_URL + orderId);
-      if (data) {
-        setRequestData(data);
-      }
+    const data = await postData(ORDER_DATA_URL, {orderId:orderId});
+    if (data) {
+      setRequestData(data);
     } else {
       setRequestData([]);
     }

@@ -1,10 +1,7 @@
 import axios from "axios";
-export const postData = async (url, jobName, conversationId) => {
+export const postData = async (url, data) => {
     try {
-      const response = await axios.post(url, {
-        jobName: jobName,
-        conversationId: conversationId,
-      });
+      const response = await axios.post(url, data);
       return response.data;
     } catch (error) {
       console.error("Error fetching data:", error);

@@ -15,21 +15,24 @@ const Sidebar = () => {
       <ul>
         {SidebarLinks.map((sidebarLink) => {
           return (
-            <li
-              key={sidebarLink.index}
-              onClick={() => handleLinkClick(sidebarLink.index)}
-              className={selectedIndex === sidebarLink.index ? "selected" : ""}
-            >
-              <p className="icons">{sidebarLink.icon}</p>
-              <Link
-                to={sidebarLink.link}
+            <Link
+              to={sidebarLink.link}
+              className={
+                selectedIndex === sidebarLink.index ? "selected" : ""
+              }
+            > 
+              
+              <li
+                key={sidebarLink.index}
+                onClick={() => handleLinkClick(sidebarLink.index)}
                 className={
-                  selectedIndex === sidebarLink.index ? "selected-text" : ""
+                  selectedIndex === sidebarLink.index ? "selected" : ""
                 }
               >
+                <p className="icons">{sidebarLink.icon}</p>
                 {sidebarLink.title}
-              </Link>
-            </li>
+              </li>
+            </Link>
           );
         })}
       </ul>
