@@ -37,18 +37,16 @@ const TraceEvents = ({ data }) => {
           </tr>
         </thead>
         <tbody>
-          {data.map((item, index) =>
-            Object.entries(item).map(([tag, url], idx) => (
-              <tr key={index + "-" + idx}>
-                <td>{tag}</td>
-                <td>
-                  <a href={selectedUrl} onClick={() => handleUrlClick(url)}>
-                    {url}
-                  </a>
-                </td>
-              </tr>
-            ))
-          )}
+          {Object.entries(data).map(([tag, url], id) => (
+            <tr key={id}>
+              <td>{tag}</td>
+              <td>
+                <a href={selectedUrl} onClick={() => handleUrlClick(url)}>
+                  {url}
+                </a>
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
       {
