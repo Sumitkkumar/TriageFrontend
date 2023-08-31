@@ -220,7 +220,7 @@ const Inventory = () => {
           )}
         </div>
         <>
-          {showTraceData && (
+          {showTraceData && requestData[selectedDataIndex] ? (
             <div>
               <h2 className="pageSubHeadings">
                 {requestData[selectedDataIndex].dataflowName}
@@ -228,7 +228,7 @@ const Inventory = () => {
               <h4>TraceEventsData</h4>
               <TraceEvents data={traceEventsData} />
             </div>
-          )}
+          ) : null}
         </>
       </div>
     </section>

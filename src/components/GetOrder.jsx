@@ -113,7 +113,6 @@ const GetOrder = () => {
                     <th>Dataflow Name</th>
                     <th>Triggered</th>
                     <th>Rapi To WareHouse</th>
-                    <th>Warehouse To Rapi</th>
                     <th>Conversation Id</th>
                     <th>Failed</th>
                     <th>
@@ -161,7 +160,6 @@ const GetOrder = () => {
                           <td>{row.dataflowName.toUpperCase()}</td>
                           <td>{row.triggered}</td>
                           <td>{row.rapiToWareHouse}</td>
-                          <td>{row.wareHouseToRapi}</td>
                           <td>{row.conversationId}</td>
                           <td>{row.failed}</td>
                           <td>{row.inTimestamp}</td>
