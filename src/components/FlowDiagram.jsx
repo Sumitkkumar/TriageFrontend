@@ -2,7 +2,8 @@ import React, { useRef, useEffect } from "react";
 import * as joint from "jointjs";
 import * as colors from "../utils/colors";
 
-const FlowDiagram = ({ jsonData }) => {
+const FlowDiagram = ({data}) => {
+  console.log("FLOWDIAGRAM:" + data);
   const paperRef = useRef(null);
   useEffect(() => {
     const graph = new joint.dia.Graph();
@@ -23,7 +24,7 @@ const FlowDiagram = ({ jsonData }) => {
     const nodes = [];
     const nodesMap = new Map();
 
-    jsonData.forEach((flow) => {
+    data.forEach((flow) => {
       const node = new joint.shapes.standard.Rectangle({
         position: { x: flow.position * 300, y: 75 },
         size: { width: 250, height: 50 },
@@ -49,18 +50,20 @@ const FlowDiagram = ({ jsonData }) => {
     for (let i = 0; i < nodes.length - 1; i++) {
       const sourceNode = nodesMap.get(i + 1);
       const targetNode = nodesMap.get(i + 2);
-
-      const link = new joint.shapes.standard.Link({
-        source: { id: sourceNode.id },
-        target: { id: targetNode.id },
-        attrs: {
-          ".connection": { stroke: "#333", "stroke-width": 3 },
-          // '.marker-target': { d: 'M 10 0 L 0 5 L 10 10 z' },
-        },
-      });
-
-      graph.addCell(link);
+    
+      if (sourceNode && targetNode) {
+        const link = new joint.shapes.standard.Link({
+          source: { id: sourceNode.id },
+          target: { id: targetNode.id },
+          attrs: {
+            ".connection": { stroke: "#333", "stroke-width": 3 },
+          },
+        });
+    
+        graph.addCell(link);
+      }
     }
+    
 
     // console.log(nodesMap);
 
@@ -84,7 +87,7 @@ const FlowDiagram = ({ jsonData }) => {
     //   const position = dagreLayout.node(node.id);
     //   node.position(position.x, position.y);
     // });
-  }, [jsonData]);
+  }, [data]);
 
   return <div className="dataflowBox" ref={paperRef}></div>;
 };

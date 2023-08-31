@@ -3,10 +3,7 @@ import { useState } from "react";
 import "./css/GetOrder.css";
 import "./css/KeyValue.css";
 import FlowDiagram from "./FlowDiagram";
-import fetchData from "../utils/helpers/fetchData";
-import axios from "axios";
 import { postData } from "../utils/helpers/postData";
-// import { RxCross2 } from "react-icons/rx";
 import TraceEvents from "./TraceEvents";
 import { ImSortAlphaDesc, ImSortAlphaAsc } from "react-icons/im";
 import { ORDER_DATA_URL, TRACE_EVENTS_DATA } from "../utils/API_URLs";
@@ -56,7 +53,7 @@ const GetOrder = () => {
       const conversationId = requestData[key].conversationId;
       const data = await postData(TRACE_EVENTS_DATA, {
         jobName: jobName,
-        conversationId: conversationId
+        conversationId: conversationId,
       });
       setTraceEventsData(data);
     } catch (error) {
@@ -70,7 +67,7 @@ const GetOrder = () => {
 
     const data = await postData(ORDER_DATA_URL, {orderId:orderId});
     if (data) {
-      setRequestData(data);
+      setRequestData(data.result.dataflows);
     } else {
       setRequestData([]);
     }
@@ -99,7 +96,7 @@ const GetOrder = () => {
           {showContent && requestData ? (
             <>
               <h2 className="pageSubHeadings">Data Flow</h2>
-              <FlowDiagram jsonData={requestData} />
+              <FlowDiagram data={requestData} />
             </>
           ) : null}
         </div>
@@ -115,7 +112,7 @@ const GetOrder = () => {
                   <tr>
                     <th>Dataflow Name</th>
                     <th>Triggered</th>
-                    <th>RapiToWareHouse</th>
+                    <th>Rapi To WareHouse</th>
                     <th>Warehouse To Rapi</th>
                     <th>Conversation Id</th>
                     <th>Failed</th>
@@ -201,7 +198,7 @@ const GetOrder = () => {
           )}
         </div>
         <>
-          {showTraceData && (
+          {showTraceData && requestData[selectedDataIndex] ? (
             <div>
               <h2 className="pageSubHeadings">
                 {requestData[selectedDataIndex].dataflowName}
@@ -209,7 +206,7 @@ const GetOrder = () => {
               <h4>TraceEventsData</h4>
               <TraceEvents data={traceEventsData} />
             </div>
-          )}
+          ) : null}
         </>
       </div>
     </section>

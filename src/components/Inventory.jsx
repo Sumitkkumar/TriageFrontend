@@ -1,14 +1,10 @@
 import React from "react";
-import axios from "axios";
 import { useState } from "react";
 import "./css/GetOrder.css";
-import { RxCross2 } from "react-icons/rx";
 import { postData } from "../utils/helpers/postData";
 import TraceEvents from "./TraceEvents";
-import { TRACE_EVENTS_DATA } from "../utils/API_URLs";
+import { INVENTORY_DATA, TRACE_EVENTS_DATA } from "../utils/API_URLs";
 import { ImSortAlphaDesc, ImSortAlphaAsc } from "react-icons/im";
-
-const API_BASE_URL = "http://localhost:8081/api/getInventory";
 
 const Inventory = () => {
   const [UPC, setUPC] = useState("");
@@ -25,19 +21,6 @@ const Inventory = () => {
   const [sortOutAsc, setSortOutAsc] = useState(true);
   const [sortQuantityAsc, setSortQuantityAsc] = useState(true);
   const [toggleTableData, setToggleTableData] = useState(false);
-
-  const fetchData = async (upc, date) => {
-    try {
-      const response = await axios.post(API_BASE_URL, {
-        upc: upc,
-        issueDate: date,
-      });
-      return response.data;
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      return null;
-    }
-  };
 
   const handleSort = (column) => {
     setToggleTableData(true);
@@ -77,7 +60,10 @@ const Inventory = () => {
     try {
       const jobName = requestData[key].dataflowName;
       const conversationId = requestData[key].ConversationId;
-      const data = await postData(TRACE_EVENTS_DATA, jobName, conversationId);
+      const data = await postData(TRACE_EVENTS_DATA, {
+        jobName: jobName,
+        conversationId: conversationId
+      });
       setTraceEventsData(data);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -88,7 +74,10 @@ const Inventory = () => {
   
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const data = await fetchData(UPC, date);
+    const data = await postData(INVENTORY_DATA, {
+      upc: UPC,
+      issueDate: date
+    });
 
     if (data != null) {
       setRequestData(data);
@@ -125,9 +114,9 @@ const Inventory = () => {
               <table className="orderContentTable">
                 <thead>
                   <tr>
-                    <th>dataflowName</th>
+                    <th>Dataflow Name</th>
                     <th>UPC</th>
-                    <th>ConversationId</th>
+                    <th>Conversation Id</th>
                     <th>
                       <div className="th--wrapper">
                         <p>Quantity</p>
@@ -144,7 +133,7 @@ const Inventory = () => {
                         )}
                       </div>
                     </th>
-                    <th>Parent ConversationId</th>
+                    <th>Parent Conversation Id</th>
                     <th>
                       <div className="th--wrapper">
                         <p>in_timestamp</p>
@@ -163,7 +152,7 @@ const Inventory = () => {
                     </th>
                     <th>
                       <div className="th--wrapper">
-                        <p>out_timestamp</p>
+                        <p>Out Timestamp</p>
                         {sortOutAsc ? (
                           <ImSortAlphaAsc
                             className="sortIcon"
