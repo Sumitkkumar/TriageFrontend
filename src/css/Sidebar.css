@@ -44,6 +44,7 @@
     color: var(--neutral-50);
     text-decoration: none;
     font-weight: 500;
+    pointer-events: none;
   }
 
   .selected:hover {

@@ -15,6 +15,7 @@ function App() {
         <div className="contentContainer">
           <Sidebar />
           <Routes>
+            <Route path="/" element={<GetOrder />} />
             <Route path="/getOrder" element={<GetOrder />} />
             <Route path="/inventoryStatus" element={<Inventory />} />
           </Routes>

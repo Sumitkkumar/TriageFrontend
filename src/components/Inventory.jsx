@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import "./css/GetOrder.css";
+import "../css/GetOrder.css";
 import { postData } from "../utils/helpers/postData";
 import TraceEvents from "./TraceEvents";
 import { INVENTORY_DATA, TRACE_EVENTS_DATA } from "../utils/API_URLs";

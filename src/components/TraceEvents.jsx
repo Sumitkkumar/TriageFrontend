@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { PAYLOAD_DATA } from "../utils/API_URLs";
-import "./css/Modal.css";
+import "../css/Modal.css";
 import Modal from "./Modal";
 
 const TraceEvents = ({ data }) => {

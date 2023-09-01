@@ -1,7 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import "./css/GetOrder.css";
-import "./css/KeyValue.css";
+import "../css/GetOrder.css";
 import FlowDiagram from "./FlowDiagram";
 import { postData } from "../utils/helpers/postData";
 import TraceEvents from "./TraceEvents";

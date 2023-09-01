@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { SidebarLinks } from "../utils/SidebarLinks";
-import "./css/Sidebar.css";
+import "../css/Sidebar.css";
 
 const Sidebar = () => {
   const [selectedIndex, setSelectedIndex] = useState(false);
