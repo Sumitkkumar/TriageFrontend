@@ -1,15 +1,20 @@
 import React from "react";
 import { useState } from "react";
 import "../css/GetOrder.css";
+import "../css/Loading.css";
 import FlowDiagram from "./FlowDiagram";
 import { postData } from "../utils/helpers/postData";
 import TraceEvents from "./TraceEvents";
 import { ImSortAlphaDesc, ImSortAlphaAsc } from "react-icons/im";
 import { ORDER_DATA_URL, TRACE_EVENTS_DATA } from "../utils/API_URLs";
+import BarLoader from "react-spinners/BarLoader";
+import * as colors from "../utils/colors";
 
 const GetOrder = () => {
   const [orderId, setOrderId] = useState("");
   const [showContent, setShowContent] = useState(false);
+  const [loading, setLoading] = useState(false);
+
   const [selectedDataIndex, setSelectedDataIndex] = useState(null);
 
   const [requestData, setRequestData] = useState([]);
@@ -63,10 +68,11 @@ const GetOrder = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
-    const data = await postData(ORDER_DATA_URL, {orderId:orderId});
-    if (data) {
+    setLoading(true);
+    const data = await postData(ORDER_DATA_URL, { orderId: orderId });
+    if (data != null) {
       setRequestData(data.result.dataflows);
+      setLoading(false);
     } else {
       setRequestData([]);
     }
@@ -85,125 +91,133 @@ const GetOrder = () => {
               placeholder="Enter your order id"
               onChange={(e) => setOrderId(e.target.value)}
             />
-            <button type="submit">Submit</button>
+            <button type="submit" disabled={loading}>Submit</button>
           </form>
         </div>
 
-        {/* DATAFLOW CONTAINER */}
-
-        <div className="dataflowContainer">
-          {showContent && requestData ? (
+        <div className="content__wrapper">
+          {loading ? (
+            <BarLoader color={colors.purple700} width={250} />
+          ) : (
             <>
-              <h2 className="pageSubHeadings">Data Flow</h2>
-              <FlowDiagram data={requestData} />
-            </>
-          ) : null}
-        </div>
+              {/* DATAFLOW CONTAINER */}
 
-        {/* TABLE CONTAINER */}
+              <div className="dataflowContainer">
+                {showContent && requestData ? (
+                  <>
+                    <h2 className="pageSubHeadings">Data Flow</h2>
+                    <FlowDiagram data={requestData} />
+                  </>
+                ) : null}
+              </div>
 
-        <div className="tableContainer">
-          {showContent && (
-            <>
-              <h2 className="pageSubHeadings">Table</h2>
-              <table className="orderContentTable">
-                <thead>
-                  <tr>
-                    <th>Dataflow Name</th>
-                    <th>Triggered</th>
-                    <th>Rapi To WareHouse</th>
-                    <th>Conversation Id</th>
-                    <th>Failed</th>
-                    <th>
-                      <div className="th--wrapper">
-                        <p>In Timestamp</p>
-                        {sortInAsc ? (
-                          <ImSortAlphaAsc
-                            className="sortIcon"
-                            onClick={() => handleSort("inTimestamp")}
-                          />
-                        ) : (
-                          <ImSortAlphaDesc
-                            className="sortIcon"
-                            onClick={() => handleSort("inTimestamp")}
-                          />
-                        )}
-                      </div>
-                    </th>
-                    <th>
-                      <div className="th--wrapper">
-                        <p>Out Timestamp</p>
-                        {sortOutAsc ? (
-                          <ImSortAlphaAsc
-                            className="sortIcon"
-                            onClick={() => handleSort("outTimestamp")}
-                          />
-                        ) : (
-                          <ImSortAlphaDesc
-                            className="sortIcon"
-                            onClick={() => handleSort("outTimestamp")}
-                          />
-                        )}
-                      </div>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {requestData != null ? (
-                    toggleTableData ? (
-                      sortedData.map((row, key) => (
-                        <tr
-                          key={key}
-                          onClick={() => displayTraceEventsData(key)}
-                        >
-                          <td>{row.dataflowName.toUpperCase()}</td>
-                          <td>{row.triggered}</td>
-                          <td>{row.rapiToWareHouse}</td>
-                          <td>{row.conversationId}</td>
-                          <td>{row.failed}</td>
-                          <td>{row.inTimestamp}</td>
-                          <td>{row.outTimestamp}</td>
+              {/* TABLE CONTAINER */}
+
+              <div className="tableContainer">
+                {showContent && (
+                  <>
+                    <h2 className="pageSubHeadings">Table</h2>
+                    <table className="orderContentTable">
+                      <thead>
+                        <tr>
+                          <th>Dataflow Name</th>
+                          <th>Triggered</th>
+                          <th>Rapi To WareHouse</th>
+                          <th>Conversation Id</th>
+                          <th>Failed</th>
+                          <th>
+                            <div className="th--wrapper">
+                              <p>In Timestamp</p>
+                              {sortInAsc ? (
+                                <ImSortAlphaAsc
+                                  className="sortIcon"
+                                  onClick={() => handleSort("inTimestamp")}
+                                />
+                              ) : (
+                                <ImSortAlphaDesc
+                                  className="sortIcon"
+                                  onClick={() => handleSort("inTimestamp")}
+                                />
+                              )}
+                            </div>
+                          </th>
+                          <th>
+                            <div className="th--wrapper">
+                              <p>Out Timestamp</p>
+                              {sortOutAsc ? (
+                                <ImSortAlphaAsc
+                                  className="sortIcon"
+                                  onClick={() => handleSort("outTimestamp")}
+                                />
+                              ) : (
+                                <ImSortAlphaDesc
+                                  className="sortIcon"
+                                  onClick={() => handleSort("outTimestamp")}
+                                />
+                              )}
+                            </div>
+                          </th>
                         </tr>
-                      ))
-                    ) : (
-                      requestData.map((row, key) => (
-                        <tr
-                          key={key}
-                          onClick={() => displayTraceEventsData(key)}
-                        >
-                          <td>{row.dataflowName.toUpperCase()}</td>
-                          <td>{row.triggered}</td>
-                          <td>{row.rapiToWareHouse}</td>
-                          <td>{row.conversationId}</td>
-                          <td>{row.failed}</td>
-                          <td>{row.inTimestamp}</td>
-                          <td>{row.outTimestamp}</td>
-                        </tr>
-                      ))
-                    )
-                  ) : (
-                    <p style={{ color: "red", fontWeight: 700 }}>
-                      No data to be displayed.
-                    </p>
-                  )}
-                </tbody>
-              </table>
+                      </thead>
+                      <tbody>
+                        {requestData != null ? (
+                          toggleTableData ? (
+                            sortedData.map((row, key) => (
+                              <tr
+                                key={key}
+                                onClick={() => displayTraceEventsData(key)}
+                              >
+                                <td>{row.dataflowName.toUpperCase()}</td>
+                                <td>{row.triggered}</td>
+                                <td>{row.rapiToWareHouse}</td>
+                                <td>{row.conversationId}</td>
+                                <td>{row.failed}</td>
+                                <td>{row.inTimestamp}</td>
+                                <td>{row.outTimestamp}</td>
+                              </tr>
+                            ))
+                          ) : (
+                            requestData.map((row, key) => (
+                              <tr
+                                key={key}
+                                onClick={() => displayTraceEventsData(key)}
+                              >
+                                <td>{row.dataflowName.toUpperCase()}</td>
+                                <td>{row.triggered}</td>
+                                <td>{row.rapiToWareHouse}</td>
+                                <td>{row.conversationId}</td>
+                                <td>{row.failed}</td>
+                                <td>{row.inTimestamp}</td>
+                                <td>{row.outTimestamp}</td>
+                              </tr>
+                            ))
+                          )
+                        ) : (
+                          <p style={{ color: "red", fontWeight: 700 }}>
+                            No data to be displayed.
+                          </p>
+                        )}
+                      </tbody>
+                    </table>
 
-              {/* ADDITIONAL TABLE CONTAINER */}
+                    {/* ADDITIONAL TABLE CONTAINER */}
+                  </>
+                )}
+              </div>
+              <>
+                {showTraceData && requestData[selectedDataIndex] ? (
+                  <div>
+                    <h2 className="pageSubHeadings">
+                      {requestData[selectedDataIndex].dataflowName}
+                    </h2>
+                    <h4>TraceEventsData</h4>
+                    <TraceEvents data={traceEventsData} />
+                  </div>
+                ) : null}
+              </>
             </>
           )}
         </div>
-        <>
-          {showTraceData && requestData[selectedDataIndex] ? (
-            <div>
-              <h2 className="pageSubHeadings">
-                {requestData[selectedDataIndex].dataflowName}
-              </h2>
-              <h4>TraceEventsData</h4>
-              <TraceEvents data={traceEventsData} />
-            </div>
-          ) : null}
-        </>
       </div>
     </section>
   );

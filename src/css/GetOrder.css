@@ -1,143 +1,148 @@
 .formContainer {
-    /* min-width: 300px; */
-    margin-top: 1rem;
-    margin-bottom: 1.5rem;
+  /* min-width: 300px; */
+  margin-top: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .formContainer form {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
 .formContainer input {
-    font-family: 'Lato', sans-serif;
-    font-size: 1rem;
-    outline: none;
-    border: none;
-    border-radius: 5px;
-    width: 220px;
-    height: 40px;
-    background-color: var(--gray-200);
-    color: var(--gray-500);
-    padding-left: 0.75rem;  
+  font-family: "Lato", sans-serif;
+  font-size: 1rem;
+  outline: none;
+  border: none;
+  border-radius: 5px;
+  width: 220px;
+  height: 40px;
+  background-color: var(--gray-200);
+  color: var(--gray-500);
+  padding-left: 0.75rem;
 }
 
 .formContainer input[type="date"]::-webkit-calendar-picker-indicator {
-    font-size: 1.35rem;
-    margin-right: 0.5rem;
-}  
+  font-size: 1.35rem;
+  margin-right: 0.5rem;
+}
 
 .formContainer input::placeholder {
-    color: var(--gray-500);
-    font-weight: 500;
+  color: var(--gray-500);
+  font-weight: 500;
 }
 
 .formContainer input:focus {
-    color: var(--gray-500);
-    /* font-size: 1rem; */
+  color: var(--gray-500);
+  /* font-size: 1rem; */
 }
 
-
-
 .formContainer button {
-    /* margin-left: 1rem; */
-    font-size: 0.95rem;
-    font-family: 'Lato', sans-serif;
-    border: none;
-    border-radius: 5px;
-    background-color: var(--green-600);
-    width: 70px;
-    height: 40px;
-    color: var(--neutral-100);
-    font-weight: 400;
+  /* margin-left: 1rem; */
+  font-size: 0.95rem;
+  font-family: "Lato", sans-serif;
+  border: none;
+  border-radius: 5px;
+  background-color: var(--green-600);
+  width: 70px;
+  height: 40px;
+  color: var(--neutral-100);
+  font-weight: 400;
 }
 
 .formContainer button:hover {
-    background-color: #22c55e;
-    border:2px solid var(--green-600);
+  background-color: #22c55e;
+  border: 2px solid var(--green-600);
 }
 
+.formContainer button:disabled {
+  background-color: var(--gray-400);
+  color: var(--gray-800);
+}
+
+.formContainer button:disabled:hover {
+  cursor: not-allowed;
+}
 
 /* Table CSS */
 
 .tableContainer {
-    margin-top: 2rem;
-    z-index: 2;
-    width: 100%;
+  margin-top: 2rem;
+  z-index: 2;
+  width: 100%;
 }
 
 .th--wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
 }
 
 .sortIcon {
-    font-size: 1rem;
+  font-size: 1rem;
 }
 
 .sortIcon:hover {
-    color: var(--purple-300);
-    cursor: pointer;
+  color: var(--purple-300);
+  cursor: pointer;
 }
 
 .orderContentTable {
-    border-collapse: collapse;
-    margin: 25px 0;
-    font-size: 1rem;
-    width: 100%;
-    padding: 0 30px;
+  border-collapse: collapse;
+  margin: 25px 0;
+  font-size: 1rem;
+  width: 100%;
+  padding: 0 30px;
 }
 
 .orderContentTable thead tr {
-    background-color: var(--purple-900);
-    border: 1px solid var(--purple-900);
-    color: var(--neutral-50);
-    font-weight: 700;
-    /* text-align: left; */
+  background-color: var(--purple-900);
+  border: 1px solid var(--purple-900);
+  color: var(--neutral-50);
+  font-weight: 700;
+  /* text-align: left; */
 }
 
-.orderContentTable th, 
+.orderContentTable th,
 .orderContentTable td {
-    padding: 15px 15px;
-} 
+  padding: 15px 15px;
+}
 
 .orderContentTable tbody td {
-    text-align: center;
-    color: var(--gray-800);
+  text-align: center;
+  color: var(--gray-800);
 }
 
 .orderContentTable tbody tr {
-    border-bottom: 1px solid var(--gray-300);
-    border-left: 1px solid var(--gray-300);
-    border-right: 1px solid var(--gray-300);
+  border-bottom: 1px solid var(--gray-300);
+  border-left: 1px solid var(--gray-300);
+  border-right: 1px solid var(--gray-300);
 }
 
-
 .orderContentTable tbody tr:hover {
-    cursor: pointer;
-    background-color: var(--purple-100);
+  cursor: pointer;
+  background-color: var(--purple-100);
 }
 
 /* Dataflow CSS */
 
 .dataflowContainer {
-    width: 100%;
+  width: 100%;
 }
 
 .dataflowBox {
-    border: 1px solid var(--gray-300);
-    border-radius: 5px;
+  border: 1px solid var(--gray-300);
+  border-radius: 5px;
 }
 
 .showMoreBtn {
-    color: blue;
-    cursor: pointer;
+  color: blue;
+  cursor: pointer;
 }
 
 .showMoreBtn:hover {
-    text-decoration: underline;
-    color: var(--purple-700);
+  text-decoration: underline;
+  color: var(--purple-700);
 }
