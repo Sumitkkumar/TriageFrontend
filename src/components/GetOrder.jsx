@@ -7,8 +7,7 @@ import { postData } from "../utils/helpers/postData";
 import TraceEvents from "./TraceEvents";
 import { ImSortAlphaDesc, ImSortAlphaAsc } from "react-icons/im";
 import { ORDER_DATA_URL, TRACE_EVENTS_DATA } from "../utils/API_URLs";
-import BarLoader from "react-spinners/BarLoader";
-import * as colors from "../utils/colors";
+import LoadingScreen from "./LoadingScreen";
 
 const GetOrder = () => {
   const [orderId, setOrderId] = useState("");
@@ -55,11 +54,13 @@ const GetOrder = () => {
     try {
       const jobName = requestData[key].dataflowName;
       const conversationId = requestData[key].conversationId;
+      setLoading(true);
       const data = await postData(TRACE_EVENTS_DATA, {
         jobName: jobName,
         conversationId: conversationId,
       });
       setTraceEventsData(data);
+      setLoading(false);
     } catch (error) {
       console.error("Error fetching data:", error);
       return null;
@@ -99,9 +100,7 @@ const GetOrder = () => {
 
         <div className="content__wrapper">
           {loading ? (
-            <div className="loading__wrapper">
-              <BarLoader color={colors.purple700} width={250} />
-            </div>
+            <LoadingScreen loading={loading}/>
           ) : (
             <>
               {/* DATAFLOW CONTAINER */}
