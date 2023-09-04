@@ -3,9 +3,11 @@ import axios from "axios";
 import { PAYLOAD_DATA } from "../utils/API_URLs";
 import "../css/Modal.css";
 import Modal from "./Modal";
+import LoadingScreen from "./LoadingScreen";
 
 const TraceEvents = ({ data }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [selectedUrl, setSelectedUrl] = useState("");
   const [jsonData, setJsonData] = useState(null);
 
@@ -13,11 +15,13 @@ const TraceEvents = ({ data }) => {
     setSelectedUrl(url);
     setIsModalOpen(true);
     try {
+      setLoading(true);
       const response = await axios.post(PAYLOAD_DATA, {
         payloadUrl: url,
       });
       console.log(response.data);
       setJsonData(response.data);
+      setLoading(false);
     } catch (error) {
       console.error("Error fetching JSON data:", error);
     }
@@ -49,13 +53,15 @@ const TraceEvents = ({ data }) => {
           ))}
         </tbody>
       </table>
-      {
+      {loading ? (
+        <LoadingScreen loading={loading} />
+      ) : (
         <Modal
           isOpen={isModalOpen}
           setIsOpen={setIsModalOpen}
           data={jsonData}
         />
-      }
+      )}
     </>
   );
 };

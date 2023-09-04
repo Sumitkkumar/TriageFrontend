@@ -5,12 +5,15 @@ import { postData } from "../utils/helpers/postData";
 import TraceEvents from "./TraceEvents";
 import { INVENTORY_DATA, TRACE_EVENTS_DATA } from "../utils/API_URLs";
 import { ImSortAlphaDesc, ImSortAlphaAsc } from "react-icons/im";
+import LoadingScreen from "./LoadingScreen";
 
 const Inventory = () => {
   const [UPC, setUPC] = useState("");
   const [date, setDate] = useState();
   const [tableVisible, setTableVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [showTraceData, setShowTraceData] = useState(false);
+
   const [selectedDataIndex, setSelectedDataIndex] = useState(null);
 
   const [sortedData, setSortedData] = useState([]);
@@ -60,11 +63,13 @@ const Inventory = () => {
     try {
       const jobName = requestData[key].dataflowName;
       const conversationId = requestData[key].ConversationId;
+      setLoading(true);
       const data = await postData(TRACE_EVENTS_DATA, {
         jobName: jobName,
         conversationId: conversationId
       });
       setTraceEventsData(data);
+      setLoading(false);
     } catch (error) {
       console.error("Error fetching data:", error);
       return null;
@@ -74,13 +79,14 @@ const Inventory = () => {
   
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setLoading(true);
     const data = await postData(INVENTORY_DATA, {
       upc: UPC,
       issueDate: date
     });
-
     if (data != null) {
       setRequestData(data);
+      setLoading(false);
       setTableVisible(true);
     } else {
       setRequestData([]);
