@@ -91,13 +91,17 @@ const GetOrder = () => {
               placeholder="Enter your order id"
               onChange={(e) => setOrderId(e.target.value)}
             />
-            <button type="submit" disabled={loading}>Submit</button>
+            <button type="submit" disabled={loading}>
+              Submit
+            </button>
           </form>
         </div>
 
         <div className="content__wrapper">
           {loading ? (
-            <BarLoader color={colors.purple700} width={250} />
+            <div className="loading__wrapper">
+              <BarLoader color={colors.purple700} width={250} />
+            </div>
           ) : (
             <>
               {/* DATAFLOW CONTAINER */}
