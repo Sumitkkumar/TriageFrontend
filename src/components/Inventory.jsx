@@ -19,7 +19,7 @@ const Inventory = () => {
   const [sortedData, setSortedData] = useState([]);
   const [requestData, setRequestData] = useState([]);
   const [traceEventsData, setTraceEventsData] = useState([]);
-  
+
   const [sortInAsc, setSortInAsc] = useState(true);
   const [sortOutAsc, setSortOutAsc] = useState(true);
   const [sortQuantityAsc, setSortQuantityAsc] = useState(true);
@@ -66,7 +66,7 @@ const Inventory = () => {
       setLoading(true);
       const data = await postData(TRACE_EVENTS_DATA, {
         jobName: jobName,
-        conversationId: conversationId
+        conversationId: conversationId,
       });
       setTraceEventsData(data);
       setLoading(false);
@@ -76,18 +76,17 @@ const Inventory = () => {
     }
   };
 
-  
   const handleSubmit = async (event) => {
     event.preventDefault();
     setLoading(true);
     const data = await postData(INVENTORY_DATA, {
       upc: UPC,
-      issueDate: date
+      issueDate: date,
     });
     if (data != null) {
       setRequestData(data);
-      setLoading(false);
       setTableVisible(true);
+      setLoading(false);
     } else {
       setRequestData([]);
     }
@@ -97,6 +96,7 @@ const Inventory = () => {
     <section className="mainContainer">
       <div className="innerContainer">
         <h1 className="pageTitle">Inventory Status</h1>
+
         <div className="formContainer">
           <form onSubmit={handleSubmit}>
             <input
@@ -113,129 +113,137 @@ const Inventory = () => {
             <button type="submit">Submit</button>
           </form>
         </div>
-        <div className="tableContainer">
-          {tableVisible && (
+        <div className="content__wrapper">
+          {loading ? (
+            <LoadingScreen loading={loading} />
+          ) : (
             <>
-              <h2 className="pageSubHeadings">Table</h2>
-              <table className="orderContentTable">
-                <thead>
-                  <tr>
-                    <th>Dataflow Name</th>
-                    <th>UPC</th>
-                    <th>Conversation Id</th>
-                    <th>
-                      <div className="th--wrapper">
-                        <p>Quantity</p>
-                        {sortInAsc ? (
-                          <ImSortAlphaAsc
-                            className="sortIcon"
-                            onClick={() => handleSort("quantity")}
-                          />
-                        ) : (
-                          <ImSortAlphaDesc
-                            className="sortIcon"
-                            onClick={() => handleSort("quantity")}
-                          />
-                        )}
-                      </div>
-                    </th>
-                    <th>Parent Conversation Id</th>
-                    <th>
-                      <div className="th--wrapper">
-                        <p>in_timestamp</p>
-                        {sortInAsc ? (
-                          <ImSortAlphaAsc
-                            className="sortIcon"
-                            onClick={() => handleSort("in_timestamp")}
-                          />
-                        ) : (
-                          <ImSortAlphaDesc
-                            className="sortIcon"
-                            onClick={() => handleSort("in_timestamp")}
-                          />
-                        )}
-                      </div>
-                    </th>
-                    <th>
-                      <div className="th--wrapper">
-                        <p>Out Timestamp</p>
-                        {sortOutAsc ? (
-                          <ImSortAlphaAsc
-                            className="sortIcon"
-                            onClick={() => handleSort("out_timestamp")}
-                          />
-                        ) : (
-                          <ImSortAlphaDesc
-                            className="sortIcon"
-                            onClick={() => handleSort("out_timestamp")}
-                          />
-                        )}
-                      </div>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {requestData != null ? (
-                    toggleTableData ? (
-                      sortedData.map((row, key) => (
-                        <tr
-                          key={key}
-                          onClick={() => displayTraceEventsData(key)}
-                        >
-                          <td>{row.dataflowName.toUpperCase()}</td>
-                          <td>{UPC}</td>
-                          <td>{row.ConversationId}</td>
-                          <td>{row.quantity}</td>
-                          <td>
-                            {row["Parent ConversationId"]
-                              ? row["Parent ConversationId"]
-                              : "null"}
-                          </td>
-                          <td>{row.in_timestamp}</td>
-                          <td>{row.out_timestamp}</td>
+              <div className="tableContainer">
+                {tableVisible && (
+                  <>
+                    <h2 className="pageSubHeadings">Table</h2>
+                    <table className="orderContentTable">
+                      <thead>
+                        <tr>
+                          <th>Dataflow Name</th>
+                          <th>UPC</th>
+                          <th>Conversation Id</th>
+                          <th>
+                            <div className="th--wrapper">
+                              <p>Quantity</p>
+                              {sortInAsc ? (
+                                <ImSortAlphaAsc
+                                  className="sortIcon"
+                                  onClick={() => handleSort("quantity")}
+                                />
+                              ) : (
+                                <ImSortAlphaDesc
+                                  className="sortIcon"
+                                  onClick={() => handleSort("quantity")}
+                                />
+                              )}
+                            </div>
+                          </th>
+                          <th>Parent Conversation Id</th>
+                          <th>
+                            <div className="th--wrapper">
+                              <p>in_timestamp</p>
+                              {sortInAsc ? (
+                                <ImSortAlphaAsc
+                                  className="sortIcon"
+                                  onClick={() => handleSort("in_timestamp")}
+                                />
+                              ) : (
+                                <ImSortAlphaDesc
+                                  className="sortIcon"
+                                  onClick={() => handleSort("in_timestamp")}
+                                />
+                              )}
+                            </div>
+                          </th>
+                          <th>
+                            <div className="th--wrapper">
+                              <p>Out Timestamp</p>
+                              {sortOutAsc ? (
+                                <ImSortAlphaAsc
+                                  className="sortIcon"
+                                  onClick={() => handleSort("out_timestamp")}
+                                />
+                              ) : (
+                                <ImSortAlphaDesc
+                                  className="sortIcon"
+                                  onClick={() => handleSort("out_timestamp")}
+                                />
+                              )}
+                            </div>
+                          </th>
                         </tr>
-                      ))
-                    ) : (
-                      requestData.map((row, key) => (
-                        <tr
-                          key={key}
-                          onClick={() => displayTraceEventsData(key)}
-                        >
-                          <td>{row.dataflowName.toUpperCase()}</td>
-                          <td>{UPC}</td>
-                          <td>{row.ConversationId}</td>
-                          <td>{row.quantity}</td>
-                          <td>
-                            {row["Parent ConversationId"]
-                              ? row["Parent ConversationId"]
-                              : "null"}
-                          </td>
-                          <td>{row.in_timestamp}</td>
-                          <td>{row.out_timestamp}</td>
-                        </tr>
-                      ))
-                    )
-                  ) : (
-                    <p style={{ color: "red", fontWeight: 700 }}>
-                      No data to be displayed.
-                    </p>
-                  )}
-                </tbody>
-              </table>
+                      </thead>
+                      <tbody>
+                        {requestData != null ? (
+                          toggleTableData ? (
+                            sortedData.map((row, key) => (
+                              <tr
+                                key={key}
+                                onClick={() => displayTraceEventsData(key)}
+                              >
+                                <td>{row.dataflowName.toUpperCase()}</td>
+                                <td>{UPC}</td>
+                                <td>{row.ConversationId}</td>
+                                <td>{row.quantity}</td>
+                                <td>
+                                  {row["Parent ConversationId"]
+                                    ? row["Parent ConversationId"]
+                                    : "null"}
+                                </td>
+                                <td>{row.in_timestamp}</td>
+                                <td>{row.out_timestamp}</td>
+                              </tr>
+                            ))
+                          ) : (
+                            requestData.map((row, key) => (
+                              <tr
+                                key={key}
+                                onClick={() => displayTraceEventsData(key)}
+                              >
+                                <td>{row.dataflowName.toUpperCase()}</td>
+                                <td>{UPC}</td>
+                                <td>{row.ConversationId}</td>
+                                <td>{row.quantity}</td>
+                                <td>
+                                  {row["Parent ConversationId"]
+                                    ? row["Parent ConversationId"]
+                                    : "null"}
+                                </td>
+                                <td>{row.in_timestamp}</td>
+                                <td>{row.out_timestamp}</td>
+                              </tr>
+                            ))
+                          )
+                        ) : (
+                          <p style={{ color: "red", fontWeight: 700 }}>
+                            No data to be displayed.
+                          </p>
+                        )}
+                      </tbody>
+                    </table>
+                  </>
+                )}
+              </div>
+              <>
+                {showTraceData && requestData[selectedDataIndex] ? (
+                  <div>
+                    <h2 className="pageSubHeadings">
+                      {requestData[selectedDataIndex].dataflowName}
+                    </h2>
+                    <h4>TraceEventsData</h4>
+                    <TraceEvents data={traceEventsData} />
+                  </div>
+                ) : null}
+              </>
             </>
           )}
         </div>
-        <>
-          {showTraceData && requestData[selectedDataIndex] ? (
-            <div>
-              <h2 className="pageSubHeadings">
-                {requestData[selectedDataIndex].dataflowName}
-              </h2>
-              <h4>TraceEventsData</h4>
-              <TraceEvents data={traceEventsData} />
-            </div>
-          ) : null}
-        </>
       </div>
     </section>
   );
