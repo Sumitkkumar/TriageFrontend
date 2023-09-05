@@ -10,10 +10,9 @@ import LoadingScreen from "./LoadingScreen";
 const Inventory = () => {
   const [UPC, setUPC] = useState("");
   const [date, setDate] = useState();
-  const [tableVisible, setTableVisible] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [tableVisible, setTableVisible] = useState(false);
   const [showTraceData, setShowTraceData] = useState(false);
-
   const [selectedDataIndex, setSelectedDataIndex] = useState(null);
 
   const [sortedData, setSortedData] = useState([]);
@@ -27,7 +26,7 @@ const Inventory = () => {
 
   const handleSort = (column) => {
     setToggleTableData(true);
-    if (column === "in_timestamp") {
+    if (column === "inTimestamp") {
       setSortedData(
         [...requestData].sort((a, b) =>
           sortInAsc
@@ -36,7 +35,7 @@ const Inventory = () => {
         )
       );
       setSortInAsc(!sortInAsc);
-    } else if (column === "out_timestamp") {
+    } else if (column === "outTimestamp") {
       setSortedData(
         [...requestData].sort((a, b) =>
           sortOutAsc
@@ -62,7 +61,7 @@ const Inventory = () => {
     setSelectedDataIndex(key);
     try {
       const jobName = requestData[key].dataflowName;
-      const conversationId = requestData[key].ConversationId;
+      const conversationId = requestData[key].conversationId;
       setLoading(true);
       const data = await postData(TRACE_EVENTS_DATA, {
         jobName: jobName,
@@ -83,8 +82,23 @@ const Inventory = () => {
       upc: UPC,
       issueDate: date,
     });
+
+    const flattenedData = [];
+
+    for (const dataflowName in data) {
+      if (data.hasOwnProperty(dataflowName)) {
+        for (const item of data[dataflowName]) {
+          const newKeyValuePair = {
+            dataflowName: dataflowName,
+            ...item,
+          };
+          flattenedData.push(newKeyValuePair);
+        }
+      }
+    }
+
     if (data != null) {
-      setRequestData(data);
+      setRequestData(flattenedData);
       setTableVisible(true);
       setLoading(false);
     } else {
@@ -131,7 +145,7 @@ const Inventory = () => {
                           <th>
                             <div className="th--wrapper">
                               <p>Quantity</p>
-                              {sortInAsc ? (
+                              {sortQuantityAsc ? (
                                 <ImSortAlphaAsc
                                   className="sortIcon"
                                   onClick={() => handleSort("quantity")}
@@ -147,16 +161,16 @@ const Inventory = () => {
                           <th>Parent Conversation Id</th>
                           <th>
                             <div className="th--wrapper">
-                              <p>in_timestamp</p>
+                              <p>In Timestamp</p>
                               {sortInAsc ? (
                                 <ImSortAlphaAsc
                                   className="sortIcon"
-                                  onClick={() => handleSort("in_timestamp")}
+                                  onClick={() => handleSort("inTimestamp")}
                                 />
                               ) : (
                                 <ImSortAlphaDesc
                                   className="sortIcon"
-                                  onClick={() => handleSort("in_timestamp")}
+                                  onClick={() => handleSort("inTimestamp")}
                                 />
                               )}
                             </div>
@@ -167,12 +181,12 @@ const Inventory = () => {
                               {sortOutAsc ? (
                                 <ImSortAlphaAsc
                                   className="sortIcon"
-                                  onClick={() => handleSort("out_timestamp")}
+                                  onClick={() => handleSort("outTimestamp")}
                                 />
                               ) : (
                                 <ImSortAlphaDesc
                                   className="sortIcon"
-                                  onClick={() => handleSort("out_timestamp")}
+                                  onClick={() => handleSort("outTimestamp")}
                                 />
                               )}
                             </div>
@@ -189,15 +203,11 @@ const Inventory = () => {
                               >
                                 <td>{row.dataflowName.toUpperCase()}</td>
                                 <td>{UPC}</td>
-                                <td>{row.ConversationId}</td>
+                                <td>{row.conversationId}</td>
                                 <td>{row.quantity}</td>
-                                <td>
-                                  {row["Parent ConversationId"]
-                                    ? row["Parent ConversationId"]
-                                    : "null"}
-                                </td>
-                                <td>{row.in_timestamp}</td>
-                                <td>{row.out_timestamp}</td>
+                                <td>{row.parentConversationId}</td>
+                                <td>{row.inTimestamp}</td>
+                                <td>{row.outTimestamp}</td>
                               </tr>
                             ))
                           ) : (
@@ -208,15 +218,11 @@ const Inventory = () => {
                               >
                                 <td>{row.dataflowName.toUpperCase()}</td>
                                 <td>{UPC}</td>
-                                <td>{row.ConversationId}</td>
+                                <td>{row.conversationId}</td>
                                 <td>{row.quantity}</td>
-                                <td>
-                                  {row["Parent ConversationId"]
-                                    ? row["Parent ConversationId"]
-                                    : "null"}
-                                </td>
-                                <td>{row.in_timestamp}</td>
-                                <td>{row.out_timestamp}</td>
+                                <td>{row.parentConversationId}</td>
+                                <td>{row.inTimestamp}</td>
+                                <td>{row.outTimestamp}</td>
                               </tr>
                             ))
                           )

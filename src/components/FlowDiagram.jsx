@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from "react";
 import * as joint from "jointjs";
 import * as colors from "../utils/colors";
 
-const FlowDiagram = ({data}) => {
+const FlowDiagram = ({ data }) => {
   console.log("FLOWDIAGRAM:" + data);
   const paperRef = useRef(null);
   useEffect(() => {
@@ -34,8 +34,8 @@ const FlowDiagram = ({data}) => {
             fontFamily: "Arial",
           },
           body: {
-            fill: flow.failed === "true" ? colors.red300 : colors.gray200,
-            stroke: flow.failed === "true" ? colors.red600 : colors.gray400,
+            fill: flow.failed === true ? colors.red300 : colors.gray200,
+            stroke: flow.failed === true ? colors.red600 : colors.gray400,
             strokeWidth: 1,
           },
         },
@@ -50,7 +50,7 @@ const FlowDiagram = ({data}) => {
     for (let i = 0; i < nodes.length - 1; i++) {
       const sourceNode = nodesMap.get(i + 1);
       const targetNode = nodesMap.get(i + 2);
-    
+
       if (sourceNode && targetNode) {
         const link = new joint.shapes.standard.Link({
           source: { id: sourceNode.id },
@@ -59,11 +59,10 @@ const FlowDiagram = ({data}) => {
             ".connection": { stroke: "#333", "stroke-width": 3 },
           },
         });
-    
+
         graph.addCell(link);
       }
     }
-    
 
     // console.log(nodesMap);
 

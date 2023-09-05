@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { PAYLOAD_DATA } from "../utils/API_URLs";
-import "../css/Modal.css";
 import Modal from "./Modal";
 import LoadingScreen from "./LoadingScreen";
 
@@ -27,7 +26,7 @@ const TraceEvents = ({ data }) => {
     }
     window.scrollTo({
       top: 0,
-      behavior: "auto", // This adds a smooth scroll animation
+      behavior: "auto",
     });
   };
 

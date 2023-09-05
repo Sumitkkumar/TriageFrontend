@@ -9,7 +9,9 @@ const Modal = ({ isOpen, setIsOpen, data }) => {
         <div className="overlay" onClick={() => setIsOpen(false)}></div>
         <div className="content">
           <h2 className="pageSubHeadings">Payload</h2>
-          <div className="modal__content">{JSON.stringify(data)}</div>
+          <div className="content-box">
+            <p>{JSON.stringify(data)}</p>
+          </div>
           <button onClick={() => setIsOpen(false)} className="closeBtn">
             Close
           </button>

@@ -1,7 +1,6 @@
 import React from "react";
 import { useState } from "react";
 import "../css/GetOrder.css";
-import "../css/Loading.css";
 import FlowDiagram from "./FlowDiagram";
 import { postData } from "../utils/helpers/postData";
 import TraceEvents from "./TraceEvents";
@@ -100,7 +99,7 @@ const GetOrder = () => {
 
         <div className="content__wrapper">
           {loading ? (
-            <LoadingScreen loading={loading}/>
+            <LoadingScreen loading={loading} />
           ) : (
             <>
               {/* DATAFLOW CONTAINER */}
@@ -174,7 +173,7 @@ const GetOrder = () => {
                                 <td>{row.triggered}</td>
                                 <td>{row.rapiToWareHouse}</td>
                                 <td>{row.conversationId}</td>
-                                <td>{row.failed}</td>
+                                <td>{row.failed.toString()}</td>
                                 <td>{row.inTimestamp}</td>
                                 <td>{row.outTimestamp}</td>
                               </tr>
@@ -189,7 +188,7 @@ const GetOrder = () => {
                                 <td>{row.triggered}</td>
                                 <td>{row.rapiToWareHouse}</td>
                                 <td>{row.conversationId}</td>
-                                <td>{row.failed}</td>
+                                <td>{row.failed.toString()}</td>
                                 <td>{row.inTimestamp}</td>
                                 <td>{row.outTimestamp}</td>
                               </tr>
