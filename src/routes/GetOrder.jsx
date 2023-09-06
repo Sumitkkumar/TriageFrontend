@@ -1,12 +1,12 @@
 import React from "react";
 import { useState } from "react";
 import "../css/GetOrder.css";
-import FlowDiagram from "./FlowDiagram";
+import FlowDiagram from "../components/FlowDiagram";
 import { postData } from "../utils/helpers/postData";
-import TraceEvents from "./TraceEvents";
+import TraceEvents from "../components/TraceEvents";
 import { ImSortAlphaDesc, ImSortAlphaAsc } from "react-icons/im";
 import { ORDER_DATA_URL, TRACE_EVENTS_DATA } from "../utils/API_URLs";
-import LoadingScreen from "./LoadingScreen";
+import LoadingScreen from "../components/LoadingScreen";
 
 const GetOrder = () => {
   const [orderId, setOrderId] = useState("");

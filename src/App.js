@@ -2,10 +2,10 @@
 import { React } from "react";
 import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar";
-import GetOrder from "./components/GetOrder";
 import "./App.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Inventory from "./components/Inventory";
+import GetOrder from "./routes/GetOrder.jsx";
+import Inventory from "./routes/Inventory.jsx";
 
 function App() {
   return (

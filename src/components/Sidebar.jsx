@@ -4,7 +4,7 @@ import { SidebarLinks } from "../utils/SidebarLinks";
 import "../css/Sidebar.css";
 
 const Sidebar = () => {
-  const [selectedIndex, setSelectedIndex] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(1);
 
   const handleLinkClick = (index) => {
     setSelectedIndex(index);
@@ -16,22 +16,27 @@ const Sidebar = () => {
         {SidebarLinks.map((sidebarLink) => {
           return (
             <Link
+              key={sidebarLink.index}
               to={sidebarLink.link}
-              className={
-                selectedIndex === sidebarLink.index ? "selected" : ""
-              }
-            > 
-              
-              <li
-                key={sidebarLink.index}
-                onClick={() => handleLinkClick(sidebarLink.index)}
+              onClick={() => handleLinkClick(sidebarLink.index)}
+              className={selectedIndex === sidebarLink.index ? "selected" : ""}
+            >
+              <p
+                className={
+                  selectedIndex === sidebarLink.index
+                    ? "icons selected"
+                    : "icons"
+                }
+              >
+                {sidebarLink.icon}
+              </p>
+              <p
                 className={
                   selectedIndex === sidebarLink.index ? "selected" : ""
                 }
               >
-                <p className="icons">{sidebarLink.icon}</p>
                 {sidebarLink.title}
-              </li>
+              </p>
             </Link>
           );
         })}

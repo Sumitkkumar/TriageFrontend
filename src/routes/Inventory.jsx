@@ -2,10 +2,10 @@ import React from "react";
 import { useState } from "react";
 import "../css/GetOrder.css";
 import { postData } from "../utils/helpers/postData";
-import TraceEvents from "./TraceEvents";
+import TraceEvents from "../components/TraceEvents";
 import { INVENTORY_DATA, TRACE_EVENTS_DATA } from "../utils/API_URLs";
 import { ImSortAlphaDesc, ImSortAlphaAsc } from "react-icons/im";
-import LoadingScreen from "./LoadingScreen";
+import LoadingScreen from "../components/LoadingScreen";
 
 const Inventory = () => {
   const [UPC, setUPC] = useState("");
