@@ -2,6 +2,7 @@ import React from "react";
 import { useState } from "react";
 import "../css/GetOrder.css";
 import { postData } from "../utils/helpers/postData";
+import { convertTimestampToEST } from "../utils/helpers/convertTimestampToEST";
 import TraceEvents from "../components/TraceEvents";
 import { INVENTORY_DATA, TRACE_EVENTS_DATA } from "../utils/API_URLs";
 import { ImSortAlphaDesc, ImSortAlphaAsc } from "react-icons/im";
@@ -206,8 +207,8 @@ const Inventory = () => {
                                 <td>{row.conversationId}</td>
                                 <td>{row.quantity}</td>
                                 <td>{row.parentConversationId}</td>
-                                <td>{row.inTimestamp}</td>
-                                <td>{row.outTimestamp}</td>
+                                <td>{convertTimestampToEST(row.inTimestamp)}</td>
+                                <td>{convertTimestampToEST(row.outTimestamp)}</td>
                               </tr>
                             ))
                           ) : (
@@ -221,8 +222,8 @@ const Inventory = () => {
                                 <td>{row.conversationId}</td>
                                 <td>{row.quantity}</td>
                                 <td>{row.parentConversationId}</td>
-                                <td>{row.inTimestamp}</td>
-                                <td>{row.outTimestamp}</td>
+                                <td>{convertTimestampToEST(row.inTimestamp)}</td>
+                                <td>{convertTimestampToEST(row.outTimestamp)}</td>
                               </tr>
                             ))
                           )

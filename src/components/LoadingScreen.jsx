@@ -9,12 +9,12 @@ const LoadingScreen = ({ loading }) => {
     loading && (
       <div className="modal">
         <div className="overlay"></div>
-        <MoonLoader
-          color={colors.purple300}
-          loading
-          size={100}
-          speedMultiplier={0.25}
-        />
+          <MoonLoader
+            color={colors.purple300}
+            loading
+            size={100}
+            speedMultiplier={0.25}
+          />
       </div>
     ),
     document.getElementById("portal")
