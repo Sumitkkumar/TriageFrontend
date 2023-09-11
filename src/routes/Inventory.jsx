@@ -24,8 +24,16 @@ const Inventory = () => {
   const [traceEventDataFlowName, setTraceEventDataFlowName] = useState('');
 
   const [sortInAsc, setSortInAsc] = useState(true);
+  const [sortInSfccAsc, setSortInSfccAsc] = useState(true);
+  const [sortInAdjustmentAsc, SetSortInAdjustmentAsc] = useState(true);
+
   const [sortOutAsc, setSortOutAsc] = useState(true);
+  const [sortOutSfccAsc, setSortOutSfccAsc] = useState(true);
+  const [sortOutAdjustmentAsc, SetSortOutAdjustmentAsc] = useState(true);
+
   const [sortQuantityAsc, setSortQuantityAsc] = useState(true);
+  const [sortSfccAsc, setSortSfccAsc] = useState(true);
+  const [sortAdjustmentAsc, SetSortAdjustmentAsc] = useState(true);
   const [toggleTableData, setToggleTableData] = useState(false);
 
   const [inventoryBalance, setInventoryBalance] = useState([]);
@@ -47,21 +55,21 @@ const Inventory = () => {
       } else if (type === "sfcc") {
         setSortedSfccData(
           [...inventorySFCC].sort((a, b) =>
-            sortInAsc
+            sortInSfccAsc
               ? new Date(a[column]) - new Date(b[column])
               : new Date(b[column]) - new Date(a[column])
           )
         );
-        setSortInAsc(!sortInAsc);
+        setSortInSfccAsc(!sortInSfccAsc);
       } else if ( type === "adjustment") {
         setSortedAdjustmentData(
           [...inventoryAdjustment].sort((a, b) =>
-            sortInAsc
+            sortInAdjustmentAsc
               ? new Date(a[column]) - new Date(b[column])
               : new Date(b[column]) - new Date(a[column])
           )
         );
-        setSortInAsc(!sortInAsc);
+        SetSortInAdjustmentAsc(!sortInAdjustmentAsc);
       }
     } else if (column === "outTimestamp") {
       if( type === "balance") {
@@ -76,21 +84,21 @@ const Inventory = () => {
       } else if (type === "sfcc") {
         setSortedSfccData(
           [...inventorySFCC].sort((a, b) =>
-            sortOutAsc
+            sortOutSfccAsc
               ? new Date(a[column]) - new Date(b[column])
               : new Date(b[column]) - new Date(a[column])
           )
         );
-        setSortOutAsc(!sortOutAsc);
+        setSortOutSfccAsc(!sortOutSfccAsc);
       } else if ( type === "adjustment") {
         setSortedAdjustmentData(
           [...inventoryAdjustment].sort((a, b) =>
-            sortOutAsc
+            sortOutAdjustmentAsc
               ? new Date(a[column]) - new Date(b[column])
               : new Date(b[column]) - new Date(a[column])
           )
         );
-        setSortOutAsc(!sortOutAsc);
+        SetSortOutAdjustmentAsc(!sortOutAdjustmentAsc);
       }
     } else if (column === "quantity") {
       if( type === "balance") {
@@ -105,21 +113,21 @@ const Inventory = () => {
       } else if (type === "sfcc") {
         setSortedSfccData(
           [...inventorySFCC].sort((a, b) =>
-            sortQuantityAsc
+            sortSfccAsc
               ? Number(a[column]) - Number(b[column])
               : Number(b[column]) - Number(a[column])
           )
         );
-        setSortQuantityAsc(!sortQuantityAsc);
+        setSortSfccAsc(!sortSfccAsc);
       } else if ( type === "adjustment") {
         setSortedAdjustmentData(
           [...inventoryAdjustment].sort((a, b) =>
-            sortQuantityAsc
+            sortAdjustmentAsc
               ? Number(a[column]) - Number(b[column])
               : Number(b[column]) - Number(a[column])
           )
         );
-        setSortQuantityAsc(!sortQuantityAsc);
+        SetSortAdjustmentAsc(!sortAdjustmentAsc);
       }
     }
   };
@@ -230,6 +238,111 @@ const Inventory = () => {
               <div className="tableContainer">
                 {tableVisible && (
                   <>
+                    <h2 className="pageSubHeadings">OMS to SFCC</h2>
+                    <table className="orderContentTable">
+                      <thead>
+                        <tr>
+                          <th>Dataflow Name</th>
+                          <th>UPC</th>
+                          <th>Conversation Id</th>
+                          <th>
+                            <div className="th--wrapper">
+                              <p>Quantity</p>
+                              {sortSfccAsc ? (
+                                <ImSortAlphaAsc
+                                  className="sortIcon"
+                                  onClick={() => handleSort("quantity", "sfcc")}
+                                />
+                              ) : (
+                                <ImSortAlphaDesc
+                                  className="sortIcon"
+                                  onClick={() => handleSort("quantity", "sfcc")}
+                                />
+                              )}
+                            </div>
+                          </th>
+                          <th>Parent Conversation Id</th>
+                          <th>
+                            <div className="th--wrapper">
+                              <p>In Timestamp</p>
+                              {sortInSfccAsc ? (
+                                <ImSortAlphaAsc
+                                  className="sortIcon"
+                                  onClick={() => handleSort("inTimestamp", "sfcc")}
+                                />
+                              ) : (
+                                <ImSortAlphaDesc
+                                  className="sortIcon"
+                                  onClick={() => handleSort("inTimestamp", "sfcc")}
+                                />
+                              )}
+                            </div>
+                          </th>
+                          <th>
+                            <div className="th--wrapper">
+                              <p>Out Timestamp</p>
+                              {sortOutSfccAsc ? (
+                                <ImSortAlphaAsc
+                                  className="sortIcon"
+                                  onClick={() => handleSort("outTimestamp", "sfcc")}
+                                />
+                              ) : (
+                                <ImSortAlphaDesc
+                                  className="sortIcon"
+                                  onClick={() => handleSort("outTimestamp", "sfcc")}
+                                />
+                              )}
+                            </div>
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {inventorySFCC != null ? (
+                          sortedSfccData.length > 0 ? (
+                            sortedSfccData.map((row, key) => (
+                              <tr
+                                key={key}
+                                onClick={() => displayTraceEventsData(key, 'sfcc')}
+                              >
+                                <td>{row.dataflowName.toUpperCase()}</td>
+                                <td>{UPC}</td>
+                                <td>{row.conversationId}</td>
+                                <td>{row.quantity}</td>
+                                <td>{row.parentConversationId}</td>
+                                <td>{row.inTimestamp}</td>
+                                <td>{row.outTimestamp}</td>
+                              </tr>
+                            ))
+                          ) : (
+                            inventorySFCC.map((row, key) => (
+                              <tr
+                                key={key}
+                                onClick={() => displayTraceEventsData(key, 'sfcc')}
+                              >
+                                <td>{row.dataflowName.toUpperCase()}</td>
+                                <td>{UPC}</td>
+                                <td>{row.conversationId}</td>
+                                <td>{row.quantity}</td>
+                                <td>{row.parentConversationId}</td>
+                                <td>{row.inTimestamp}</td>
+                                <td>{row.outTimestamp}</td>
+                              </tr>
+                            ))
+                          )
+                        ) : (
+                          <p style={{ color: "red", fontWeight: 700 }}>
+                            No data to be displayed.
+                          </p>
+                        )}
+                      </tbody>
+                    </table>
+                  </>
+                )}
+              </div>
+              <br />
+              <div className="tableContainer">
+                {tableVisible && (
+                  <>
                     <h2 className="pageSubHeadings">Warehouse to OMS inventory balance</h2>
                     <table className="orderContentTable">
                       <thead>
@@ -335,111 +448,6 @@ const Inventory = () => {
               <div className="tableContainer">
                 {tableVisible && (
                   <>
-                    <h2 className="pageSubHeadings">OMS to SFCC</h2>
-                    <table className="orderContentTable">
-                      <thead>
-                        <tr>
-                          <th>Dataflow Name</th>
-                          <th>UPC</th>
-                          <th>Conversation Id</th>
-                          <th>
-                            <div className="th--wrapper">
-                              <p>Quantity</p>
-                              {sortQuantityAsc ? (
-                                <ImSortAlphaAsc
-                                  className="sortIcon"
-                                  onClick={() => handleSort("quantity", "sfcc")}
-                                />
-                              ) : (
-                                <ImSortAlphaDesc
-                                  className="sortIcon"
-                                  onClick={() => handleSort("quantity", "sfcc")}
-                                />
-                              )}
-                            </div>
-                          </th>
-                          <th>Parent Conversation Id</th>
-                          <th>
-                            <div className="th--wrapper">
-                              <p>In Timestamp</p>
-                              {sortInAsc ? (
-                                <ImSortAlphaAsc
-                                  className="sortIcon"
-                                  onClick={() => handleSort("inTimestamp", "sfcc")}
-                                />
-                              ) : (
-                                <ImSortAlphaDesc
-                                  className="sortIcon"
-                                  onClick={() => handleSort("inTimestamp", "sfcc")}
-                                />
-                              )}
-                            </div>
-                          </th>
-                          <th>
-                            <div className="th--wrapper">
-                              <p>Out Timestamp</p>
-                              {sortOutAsc ? (
-                                <ImSortAlphaAsc
-                                  className="sortIcon"
-                                  onClick={() => handleSort("outTimestamp", "sfcc")}
-                                />
-                              ) : (
-                                <ImSortAlphaDesc
-                                  className="sortIcon"
-                                  onClick={() => handleSort("outTimestamp", "sfcc")}
-                                />
-                              )}
-                            </div>
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {inventorySFCC != null ? (
-                          sortedSfccData.length > 0 ? (
-                            sortedSfccData.map((row, key) => (
-                              <tr
-                                key={key}
-                                onClick={() => displayTraceEventsData(key, 'sfcc')}
-                              >
-                                <td>{row.dataflowName.toUpperCase()}</td>
-                                <td>{UPC}</td>
-                                <td>{row.conversationId}</td>
-                                <td>{row.quantity}</td>
-                                <td>{row.parentConversationId}</td>
-                                <td>{row.inTimestamp}</td>
-                                <td>{row.outTimestamp}</td>
-                              </tr>
-                            ))
-                          ) : (
-                            inventorySFCC.map((row, key) => (
-                              <tr
-                                key={key}
-                                onClick={() => displayTraceEventsData(key, 'sfcc')}
-                              >
-                                <td>{row.dataflowName.toUpperCase()}</td>
-                                <td>{UPC}</td>
-                                <td>{row.conversationId}</td>
-                                <td>{row.quantity}</td>
-                                <td>{row.parentConversationId}</td>
-                                <td>{row.inTimestamp}</td>
-                                <td>{row.outTimestamp}</td>
-                              </tr>
-                            ))
-                          )
-                        ) : (
-                          <p style={{ color: "red", fontWeight: 700 }}>
-                            No data to be displayed.
-                          </p>
-                        )}
-                      </tbody>
-                    </table>
-                  </>
-                )}
-              </div>
-              <br />
-              <div className="tableContainer">
-                {tableVisible && (
-                  <>
                     <h2 className="pageSubHeadings">Warehouse to OMS inventory adjustments</h2>
                     <table className="orderContentTable">
                       <thead>
@@ -450,7 +458,7 @@ const Inventory = () => {
                           <th>
                             <div className="th--wrapper">
                               <p>Quantity</p>
-                              {sortQuantityAsc ? (
+                              {sortAdjustmentAsc ? (
                                 <ImSortAlphaAsc
                                   className="sortIcon"
                                   onClick={() => handleSort("quantity", "adjustment")}
@@ -467,7 +475,7 @@ const Inventory = () => {
                           <th>
                             <div className="th--wrapper">
                               <p>In Timestamp</p>
-                              {sortInAsc ? (
+                              {sortInAdjustmentAsc ? (
                                 <ImSortAlphaAsc
                                   className="sortIcon"
                                   onClick={() => handleSort("inTimestamp", "adjustment")}
@@ -483,7 +491,7 @@ const Inventory = () => {
                           <th>
                             <div className="th--wrapper">
                               <p>Out Timestamp</p>
-                              {sortOutAsc ? (
+                              {sortOutAdjustmentAsc ? (
                                 <ImSortAlphaAsc
                                   className="sortIcon"
                                   onClick={() => handleSort("outTimestamp", "adjustment")}
