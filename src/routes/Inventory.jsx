@@ -2,6 +2,7 @@ import React from "react";
 import { useState } from "react";
 import "../css/GetOrder.css";
 import { postData } from "../utils/helpers/postData";
+import { convertTimestampToEST } from "../utils/helpers/convertTimestampToEST";
 import TraceEvents from "../components/TraceEvents";
 import { INVENTORY_DATA, TRACE_EVENTS_DATA } from "../utils/API_URLs";
 import { ImSortAlphaDesc, ImSortAlphaAsc } from "react-icons/im";
@@ -21,21 +22,19 @@ const Inventory = () => {
 
   const [requestData, setRequestData] = useState([]);
   const [traceEventsData, setTraceEventsData] = useState([]);
-  const [traceEventDataFlowName, setTraceEventDataFlowName] = useState('');
+  const [traceEventDataFlowName, setTraceEventDataFlowName] = useState("");
 
   const [sortInAsc, setSortInAsc] = useState(true);
   const [sortOutAsc, setSortOutAsc] = useState(true);
   const [sortQuantityAsc, setSortQuantityAsc] = useState(true);
-  const [toggleTableData, setToggleTableData] = useState(false);
 
   const [inventoryBalance, setInventoryBalance] = useState([]);
   const [inventorySFCC, setInventorySFCC] = useState([]);
   const [inventoryAdjustment, setInventoryAdjustment] = useState([]);
 
   const handleSort = (column, type) => {
-    setToggleTableData(true);
     if (column === "inTimestamp") {
-      if( type === "balance") {
+      if (type === "balance") {
         setSortedBalanceData(
           [...inventoryBalance].sort((a, b) =>
             sortInAsc
@@ -53,7 +52,7 @@ const Inventory = () => {
           )
         );
         setSortInAsc(!sortInAsc);
-      } else if ( type === "adjustment") {
+      } else if (type === "adjustment") {
         setSortedAdjustmentData(
           [...inventoryAdjustment].sort((a, b) =>
             sortInAsc
@@ -64,7 +63,7 @@ const Inventory = () => {
         setSortInAsc(!sortInAsc);
       }
     } else if (column === "outTimestamp") {
-      if( type === "balance") {
+      if (type === "balance") {
         setSortedBalanceData(
           [...inventoryBalance].sort((a, b) =>
             sortOutAsc
@@ -82,7 +81,7 @@ const Inventory = () => {
           )
         );
         setSortOutAsc(!sortOutAsc);
-      } else if ( type === "adjustment") {
+      } else if (type === "adjustment") {
         setSortedAdjustmentData(
           [...inventoryAdjustment].sort((a, b) =>
             sortOutAsc
@@ -93,7 +92,7 @@ const Inventory = () => {
         setSortOutAsc(!sortOutAsc);
       }
     } else if (column === "quantity") {
-      if( type === "balance") {
+      if (type === "balance") {
         setSortedBalanceData(
           [...inventoryBalance].sort((a, b) =>
             sortQuantityAsc
@@ -111,7 +110,7 @@ const Inventory = () => {
           )
         );
         setSortQuantityAsc(!sortQuantityAsc);
-      } else if ( type === "adjustment") {
+      } else if (type === "adjustment") {
         setSortedAdjustmentData(
           [...inventoryAdjustment].sort((a, b) =>
             sortQuantityAsc
@@ -130,18 +129,18 @@ const Inventory = () => {
     try {
       let jobName;
       let conversationId;
-      if (type === 'balance') {
+      if (type === "balance") {
         jobName = inventoryBalance[key].dataflowName;
         conversationId = inventoryBalance[key].conversationId;
-        setTraceEventDataFlowName('INVENTORY-BALANCE-MSK-OUT-OMS');
-      } else if (type === 'sfcc') {
+        setTraceEventDataFlowName("INVENTORY-BALANCE-MSK-OUT-OMS");
+      } else if (type === "sfcc") {
         jobName = inventorySFCC[key].dataflowName;
         conversationId = inventorySFCC[key].conversationId;
-        setTraceEventDataFlowName('INVENTORY-OUT-OMS-SFCC');
-      } else if (type === 'adjustment') {
+        setTraceEventDataFlowName("INVENTORY-OUT-OMS-SFCC");
+      } else if (type === "adjustment") {
         jobName = inventoryAdjustment[key].dataflowName;
         conversationId = inventoryAdjustment[key].conversationId;
-        setTraceEventDataFlowName('INVENTORY-ADJ-MSK-OMS');
+        setTraceEventDataFlowName("INVENTORY-ADJ-MSK-OMS");
       }
       setLoading(true);
       const data = await postData(TRACE_EVENTS_DATA, {
@@ -184,12 +183,12 @@ const Inventory = () => {
       flattenedData.forEach((data, index) => {
         if (data.dataflowName === "INVENTORY-BALANCE-MSK-OUT-OMS") {
           balanceData.push(data);
-        } else if ( data.dataflowName === "INVENTORY-OUT-OMS-SFCC") {
-          sfccData.push(data)
-        } else if ( data.dataflowName === "INVENTORY-ADJ-MSK-OMS") {
+        } else if (data.dataflowName === "INVENTORY-OUT-OMS-SFCC") {
+          sfccData.push(data);
+        } else if (data.dataflowName === "INVENTORY-ADJ-MSK-OMS") {
           adjustmentData.push(data);
         }
-      })
+      });
       setInventoryBalance(balanceData);
       setInventorySFCC(sfccData);
       setInventoryAdjustment(adjustmentData);
@@ -230,7 +229,9 @@ const Inventory = () => {
               <div className="tableContainer">
                 {tableVisible && (
                   <>
-                    <h2 className="pageSubHeadings">Warehouse to OMS inventory balance</h2>
+                    <h2 className="pageSubHeadings">
+                      Warehouse to OMS inventory balance
+                    </h2>
                     <table className="orderContentTable">
                       <thead>
                         <tr>
@@ -243,12 +244,16 @@ const Inventory = () => {
                               {sortQuantityAsc ? (
                                 <ImSortAlphaAsc
                                   className="sortIcon"
-                                  onClick={() => handleSort("quantity", "balance")}
+                                  onClick={() =>
+                                    handleSort("quantity", "balance")
+                                  }
                                 />
                               ) : (
                                 <ImSortAlphaDesc
                                   className="sortIcon"
-                                  onClick={() => handleSort("quantity", "balance")}
+                                  onClick={() =>
+                                    handleSort("quantity", "balance")
+                                  }
                                 />
                               )}
                             </div>
@@ -260,12 +265,16 @@ const Inventory = () => {
                               {sortInAsc ? (
                                 <ImSortAlphaAsc
                                   className="sortIcon"
-                                  onClick={() => handleSort("inTimestamp", "balance")}
+                                  onClick={() =>
+                                    handleSort("inTimestamp", "balance")
+                                  }
                                 />
                               ) : (
                                 <ImSortAlphaDesc
                                   className="sortIcon"
-                                  onClick={() => handleSort("inTimestamp", "balance")}
+                                  onClick={() =>
+                                    handleSort("inTimestamp", "balance")
+                                  }
                                 />
                               )}
                             </div>
@@ -276,12 +285,16 @@ const Inventory = () => {
                               {sortOutAsc ? (
                                 <ImSortAlphaAsc
                                   className="sortIcon"
-                                  onClick={() => handleSort("outTimestamp", "balance")}
+                                  onClick={() =>
+                                    handleSort("outTimestamp", "balance")
+                                  }
                                 />
                               ) : (
                                 <ImSortAlphaDesc
                                   className="sortIcon"
-                                  onClick={() => handleSort("outTimestamp", "balance")}
+                                  onClick={() =>
+                                    handleSort("outTimestamp", "balance")
+                                  }
                                 />
                               )}
                             </div>
@@ -294,30 +307,42 @@ const Inventory = () => {
                             sortedBalanceData.map((row, key) => (
                               <tr
                                 key={key}
-                                onClick={() => displayTraceEventsData(key, 'balance')}
+                                onClick={() =>
+                                  displayTraceEventsData(key, "balance")
+                                }
                               >
                                 <td>{row.dataflowName.toUpperCase()}</td>
                                 <td>{UPC}</td>
                                 <td>{row.conversationId}</td>
                                 <td>{row.quantity}</td>
                                 <td>{row.parentConversationId}</td>
-                                <td>{row.inTimestamp}</td>
-                                <td>{row.outTimestamp}</td>
+                                <td>
+                                  {convertTimestampToEST(row.inTimestamp)}
+                                </td>
+                                <td>
+                                  {convertTimestampToEST(row.outTimestamp)}
+                                </td>
                               </tr>
                             ))
                           ) : (
                             inventoryBalance.map((row, key) => (
                               <tr
                                 key={key}
-                                onClick={() => displayTraceEventsData(key, 'balance')}
+                                onClick={() =>
+                                  displayTraceEventsData(key, "balance")
+                                }
                               >
                                 <td>{row.dataflowName.toUpperCase()}</td>
                                 <td>{UPC}</td>
                                 <td>{row.conversationId}</td>
                                 <td>{row.quantity}</td>
                                 <td>{row.parentConversationId}</td>
-                                <td>{row.inTimestamp}</td>
-                                <td>{row.outTimestamp}</td>
+                                <td>
+                                  {convertTimestampToEST(row.inTimestamp)}
+                                </td>
+                                <td>
+                                  {convertTimestampToEST(row.outTimestamp)}
+                                </td>
                               </tr>
                             ))
                           )
@@ -365,12 +390,16 @@ const Inventory = () => {
                               {sortInAsc ? (
                                 <ImSortAlphaAsc
                                   className="sortIcon"
-                                  onClick={() => handleSort("inTimestamp", "sfcc")}
+                                  onClick={() =>
+                                    handleSort("inTimestamp", "sfcc")
+                                  }
                                 />
                               ) : (
                                 <ImSortAlphaDesc
                                   className="sortIcon"
-                                  onClick={() => handleSort("inTimestamp", "sfcc")}
+                                  onClick={() =>
+                                    handleSort("inTimestamp", "sfcc")
+                                  }
                                 />
                               )}
                             </div>
@@ -381,12 +410,16 @@ const Inventory = () => {
                               {sortOutAsc ? (
                                 <ImSortAlphaAsc
                                   className="sortIcon"
-                                  onClick={() => handleSort("outTimestamp", "sfcc")}
+                                  onClick={() =>
+                                    handleSort("outTimestamp", "sfcc")
+                                  }
                                 />
                               ) : (
                                 <ImSortAlphaDesc
                                   className="sortIcon"
-                                  onClick={() => handleSort("outTimestamp", "sfcc")}
+                                  onClick={() =>
+                                    handleSort("outTimestamp", "sfcc")
+                                  }
                                 />
                               )}
                             </div>
@@ -399,30 +432,42 @@ const Inventory = () => {
                             sortedSfccData.map((row, key) => (
                               <tr
                                 key={key}
-                                onClick={() => displayTraceEventsData(key, 'sfcc')}
+                                onClick={() =>
+                                  displayTraceEventsData(key, "sfcc")
+                                }
                               >
                                 <td>{row.dataflowName.toUpperCase()}</td>
                                 <td>{UPC}</td>
                                 <td>{row.conversationId}</td>
                                 <td>{row.quantity}</td>
                                 <td>{row.parentConversationId}</td>
-                                <td>{row.inTimestamp}</td>
-                                <td>{row.outTimestamp}</td>
+                                <td>
+                                  {convertTimestampToEST(row.inTimestamp)}
+                                </td>
+                                <td>
+                                  {convertTimestampToEST(row.outTimestamp)}
+                                </td>
                               </tr>
                             ))
                           ) : (
                             inventorySFCC.map((row, key) => (
                               <tr
                                 key={key}
-                                onClick={() => displayTraceEventsData(key, 'sfcc')}
+                                onClick={() =>
+                                  displayTraceEventsData(key, "sfcc")
+                                }
                               >
                                 <td>{row.dataflowName.toUpperCase()}</td>
                                 <td>{UPC}</td>
                                 <td>{row.conversationId}</td>
                                 <td>{row.quantity}</td>
                                 <td>{row.parentConversationId}</td>
-                                <td>{row.inTimestamp}</td>
-                                <td>{row.outTimestamp}</td>
+                                <td>
+                                  {convertTimestampToEST(row.inTimestamp)}
+                                </td>
+                                <td>
+                                  {convertTimestampToEST(row.outTimestamp)}
+                                </td>
                               </tr>
                             ))
                           )
@@ -440,7 +485,9 @@ const Inventory = () => {
               <div className="tableContainer">
                 {tableVisible && (
                   <>
-                    <h2 className="pageSubHeadings">Warehouse to OMS inventory adjustments</h2>
+                    <h2 className="pageSubHeadings">
+                      Warehouse to OMS inventory adjustments
+                    </h2>
                     <table className="orderContentTable">
                       <thead>
                         <tr>
@@ -453,12 +500,16 @@ const Inventory = () => {
                               {sortQuantityAsc ? (
                                 <ImSortAlphaAsc
                                   className="sortIcon"
-                                  onClick={() => handleSort("quantity", "adjustment")}
+                                  onClick={() =>
+                                    handleSort("quantity", "adjustment")
+                                  }
                                 />
                               ) : (
                                 <ImSortAlphaDesc
                                   className="sortIcon"
-                                  onClick={() => handleSort("quantity", "adjustment")}
+                                  onClick={() =>
+                                    handleSort("quantity", "adjustment")
+                                  }
                                 />
                               )}
                             </div>
@@ -470,12 +521,16 @@ const Inventory = () => {
                               {sortInAsc ? (
                                 <ImSortAlphaAsc
                                   className="sortIcon"
-                                  onClick={() => handleSort("inTimestamp", "adjustment")}
+                                  onClick={() =>
+                                    handleSort("inTimestamp", "adjustment")
+                                  }
                                 />
                               ) : (
                                 <ImSortAlphaDesc
                                   className="sortIcon"
-                                  onClick={() => handleSort("inTimestamp", "adjustment")}
+                                  onClick={() =>
+                                    handleSort("inTimestamp", "adjustment")
+                                  }
                                 />
                               )}
                             </div>
@@ -486,12 +541,16 @@ const Inventory = () => {
                               {sortOutAsc ? (
                                 <ImSortAlphaAsc
                                   className="sortIcon"
-                                  onClick={() => handleSort("outTimestamp", "adjustment")}
+                                  onClick={() =>
+                                    handleSort("outTimestamp", "adjustment")
+                                  }
                                 />
                               ) : (
                                 <ImSortAlphaDesc
                                   className="sortIcon"
-                                  onClick={() => handleSort("outTimestamp", "adjustment")}
+                                  onClick={() =>
+                                    handleSort("outTimestamp", "adjustment")
+                                  }
                                 />
                               )}
                             </div>
@@ -504,30 +563,42 @@ const Inventory = () => {
                             sortedAdjustmentData.map((row, key) => (
                               <tr
                                 key={key}
-                                onClick={() => displayTraceEventsData(key, 'adjustment')}
+                                onClick={() =>
+                                  displayTraceEventsData(key, "adjustment")
+                                }
                               >
                                 <td>{row.dataflowName.toUpperCase()}</td>
                                 <td>{UPC}</td>
                                 <td>{row.conversationId}</td>
                                 <td>{row.quantity}</td>
                                 <td>{row.parentConversationId}</td>
-                                <td>{row.inTimestamp}</td>
-                                <td>{row.outTimestamp}</td>
+                                <td>
+                                  {convertTimestampToEST(row.inTimestamp)}
+                                </td>
+                                <td>
+                                  {convertTimestampToEST(row.outTimestamp)}
+                                </td>
                               </tr>
                             ))
                           ) : (
                             inventoryAdjustment.map((row, key) => (
                               <tr
                                 key={key}
-                                onClick={() => displayTraceEventsData(key, 'adjustment')}
+                                onClick={() =>
+                                  displayTraceEventsData(key, "adjustment")
+                                }
                               >
                                 <td>{row.dataflowName.toUpperCase()}</td>
                                 <td>{UPC}</td>
                                 <td>{row.conversationId}</td>
                                 <td>{row.quantity}</td>
                                 <td>{row.parentConversationId}</td>
-                                <td>{row.inTimestamp}</td>
-                                <td>{row.outTimestamp}</td>
+                                <td>
+                                  {convertTimestampToEST(row.inTimestamp)}
+                                </td>
+                                <td>
+                                  {convertTimestampToEST(row.outTimestamp)}
+                                </td>
                               </tr>
                             ))
                           )
