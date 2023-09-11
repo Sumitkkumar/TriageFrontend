@@ -25,8 +25,19 @@ const Inventory = () => {
   const [traceEventDataFlowName, setTraceEventDataFlowName] = useState("");
 
   const [sortInAsc, setSortInAsc] = useState(true);
+  const [sortInSfccAsc, setSortInSfccAsc] = useState(true);
+  const [sortInAdjustmentAsc, SetSortInAdjustmentAsc] = useState(true);
+
   const [sortOutAsc, setSortOutAsc] = useState(true);
+  const [sortOutSfccAsc, setSortOutSfccAsc] = useState(true);
+  const [sortOutAdjustmentAsc, SetSortOutAdjustmentAsc] = useState(true);
+
   const [sortQuantityAsc, setSortQuantityAsc] = useState(true);
+
+  const [sortSfccAsc, setSortSfccAsc] = useState(true);
+  const [sortAdjustmentAsc, SetSortAdjustmentAsc] = useState(true);
+  const [toggleTableData, setToggleTableData] = useState(false);
+
 
   const [inventoryBalance, setInventoryBalance] = useState([]);
   const [inventorySFCC, setInventorySFCC] = useState([]);
@@ -46,21 +57,23 @@ const Inventory = () => {
       } else if (type === "sfcc") {
         setSortedSfccData(
           [...inventorySFCC].sort((a, b) =>
-            sortInAsc
+            sortInSfccAsc
               ? new Date(a[column]) - new Date(b[column])
               : new Date(b[column]) - new Date(a[column])
           )
         );
+        setSortInSfccAsc(!sortInSfccAsc);
+      } else if ( type === "adjustment") {
         setSortInAsc(!sortInAsc);
       } else if (type === "adjustment") {
         setSortedAdjustmentData(
           [...inventoryAdjustment].sort((a, b) =>
-            sortInAsc
+            sortInAdjustmentAsc
               ? new Date(a[column]) - new Date(b[column])
               : new Date(b[column]) - new Date(a[column])
           )
         );
-        setSortInAsc(!sortInAsc);
+        SetSortInAdjustmentAsc(!sortInAdjustmentAsc);
       }
     } else if (column === "outTimestamp") {
       if (type === "balance") {
@@ -75,21 +88,23 @@ const Inventory = () => {
       } else if (type === "sfcc") {
         setSortedSfccData(
           [...inventorySFCC].sort((a, b) =>
-            sortOutAsc
+            sortOutSfccAsc
               ? new Date(a[column]) - new Date(b[column])
               : new Date(b[column]) - new Date(a[column])
           )
         );
+        setSortOutSfccAsc(!sortOutSfccAsc);
+      } else if ( type === "adjustment") {
         setSortOutAsc(!sortOutAsc);
       } else if (type === "adjustment") {
         setSortedAdjustmentData(
           [...inventoryAdjustment].sort((a, b) =>
-            sortOutAsc
+            sortOutAdjustmentAsc
               ? new Date(a[column]) - new Date(b[column])
               : new Date(b[column]) - new Date(a[column])
           )
         );
-        setSortOutAsc(!sortOutAsc);
+        SetSortOutAdjustmentAsc(!sortOutAdjustmentAsc);
       }
     } else if (column === "quantity") {
       if (type === "balance") {
@@ -104,21 +119,23 @@ const Inventory = () => {
       } else if (type === "sfcc") {
         setSortedSfccData(
           [...inventorySFCC].sort((a, b) =>
-            sortQuantityAsc
+            sortSfccAsc
               ? Number(a[column]) - Number(b[column])
               : Number(b[column]) - Number(a[column])
           )
         );
+        setSortSfccAsc(!sortSfccAsc);
+      } else if ( type === "adjustment") {
         setSortQuantityAsc(!sortQuantityAsc);
       } else if (type === "adjustment") {
         setSortedAdjustmentData(
           [...inventoryAdjustment].sort((a, b) =>
-            sortQuantityAsc
+            sortAdjustmentAsc
               ? Number(a[column]) - Number(b[column])
               : Number(b[column]) - Number(a[column])
           )
         );
-        setSortQuantityAsc(!sortQuantityAsc);
+        SetSortAdjustmentAsc(!sortAdjustmentAsc);
       }
     }
   };
@@ -229,6 +246,7 @@ const Inventory = () => {
               <div className="tableContainer">
                 {tableVisible && (
                   <>
+                    <h2 className="pageSubHeadings">OMS to SFCC</h2>
                     <h2 className="pageSubHeadings">
                       Warehouse to OMS inventory balance
                     </h2>
@@ -241,9 +259,10 @@ const Inventory = () => {
                           <th>
                             <div className="th--wrapper">
                               <p>Quantity</p>
-                              {sortQuantityAsc ? (
+                              {sortSfccAsc ? (
                                 <ImSortAlphaAsc
                                   className="sortIcon"
+                                  onClick={() => handleSort("quantity", "sfcc")}
                                   onClick={() =>
                                     handleSort("quantity", "balance")
                                   }
@@ -251,6 +270,7 @@ const Inventory = () => {
                               ) : (
                                 <ImSortAlphaDesc
                                   className="sortIcon"
+                                  onClick={() => handleSort("quantity", "sfcc")}
                                   onClick={() =>
                                     handleSort("quantity", "balance")
                                   }
@@ -262,9 +282,10 @@ const Inventory = () => {
                           <th>
                             <div className="th--wrapper">
                               <p>In Timestamp</p>
-                              {sortInAsc ? (
+                              {sortInSfccAsc ? (
                                 <ImSortAlphaAsc
                                   className="sortIcon"
+                                  onClick={() => handleSort("inTimestamp", "sfcc")}
                                   onClick={() =>
                                     handleSort("inTimestamp", "balance")
                                   }
@@ -272,6 +293,7 @@ const Inventory = () => {
                               ) : (
                                 <ImSortAlphaDesc
                                   className="sortIcon"
+                                  onClick={() => handleSort("inTimestamp", "sfcc")}
                                   onClick={() =>
                                     handleSort("inTimestamp", "balance")
                                   }
@@ -282,9 +304,10 @@ const Inventory = () => {
                           <th>
                             <div className="th--wrapper">
                               <p>Out Timestamp</p>
-                              {sortOutAsc ? (
+                              {sortOutSfccAsc ? (
                                 <ImSortAlphaAsc
                                   className="sortIcon"
+                                  onClick={() => handleSort("outTimestamp", "sfcc")}
                                   onClick={() =>
                                     handleSort("outTimestamp", "balance")
                                   }
@@ -292,6 +315,7 @@ const Inventory = () => {
                               ) : (
                                 <ImSortAlphaDesc
                                   className="sortIcon"
+                                  onClick={() => handleSort("outTimestamp", "sfcc")}
                                   onClick={() =>
                                     handleSort("outTimestamp", "balance")
                                   }
@@ -302,11 +326,12 @@ const Inventory = () => {
                         </tr>
                       </thead>
                       <tbody>
-                        {inventoryBalance != null ? (
-                          sortedBalanceData.length > 0 ? (
-                            sortedBalanceData.map((row, key) => (
+                        {inventorySFCC != null ? (
+                          sortedSfccData.length > 0 ? (
+                            sortedSfccData.map((row, key) => (
                               <tr
                                 key={key}
+                                onClick={() => displayTraceEventsData(key, 'sfcc')}
                                 onClick={() =>
                                   displayTraceEventsData(key, "balance")
                                 }
@@ -325,9 +350,10 @@ const Inventory = () => {
                               </tr>
                             ))
                           ) : (
-                            inventoryBalance.map((row, key) => (
+                            inventorySFCC.map((row, key) => (
                               <tr
                                 key={key}
+                                onClick={() => displayTraceEventsData(key, 'sfcc')}
                                 onClick={() =>
                                   displayTraceEventsData(key, "balance")
                                 }
@@ -360,7 +386,7 @@ const Inventory = () => {
               <div className="tableContainer">
                 {tableVisible && (
                   <>
-                    <h2 className="pageSubHeadings">OMS to SFCC</h2>
+                    <h2 className="pageSubHeadings">Warehouse to OMS inventory balance</h2>
                     <table className="orderContentTable">
                       <thead>
                         <tr>
@@ -373,12 +399,12 @@ const Inventory = () => {
                               {sortQuantityAsc ? (
                                 <ImSortAlphaAsc
                                   className="sortIcon"
-                                  onClick={() => handleSort("quantity", "sfcc")}
+                                  onClick={() => handleSort("quantity", "balance")}
                                 />
                               ) : (
                                 <ImSortAlphaDesc
                                   className="sortIcon"
-                                  onClick={() => handleSort("quantity", "sfcc")}
+                                  onClick={() => handleSort("quantity", "balance")}
                                 />
                               )}
                             </div>
@@ -390,6 +416,7 @@ const Inventory = () => {
                               {sortInAsc ? (
                                 <ImSortAlphaAsc
                                   className="sortIcon"
+                                  onClick={() => handleSort("inTimestamp", "balance")}
                                   onClick={() =>
                                     handleSort("inTimestamp", "sfcc")
                                   }
@@ -397,6 +424,7 @@ const Inventory = () => {
                               ) : (
                                 <ImSortAlphaDesc
                                   className="sortIcon"
+                                  onClick={() => handleSort("inTimestamp", "balance")}
                                   onClick={() =>
                                     handleSort("inTimestamp", "sfcc")
                                   }
@@ -410,6 +438,7 @@ const Inventory = () => {
                               {sortOutAsc ? (
                                 <ImSortAlphaAsc
                                   className="sortIcon"
+                                  onClick={() => handleSort("outTimestamp", "balance")}
                                   onClick={() =>
                                     handleSort("outTimestamp", "sfcc")
                                   }
@@ -417,6 +446,7 @@ const Inventory = () => {
                               ) : (
                                 <ImSortAlphaDesc
                                   className="sortIcon"
+                                  onClick={() => handleSort("outTimestamp", "balance")}
                                   onClick={() =>
                                     handleSort("outTimestamp", "sfcc")
                                   }
@@ -427,11 +457,12 @@ const Inventory = () => {
                         </tr>
                       </thead>
                       <tbody>
-                        {inventorySFCC != null ? (
-                          sortedSfccData.length > 0 ? (
-                            sortedSfccData.map((row, key) => (
+                        {inventoryBalance != null ? (
+                          sortedBalanceData.length > 0 ? (
+                            sortedBalanceData.map((row, key) => (
                               <tr
                                 key={key}
+                                onClick={() => displayTraceEventsData(key, 'balance')}
                                 onClick={() =>
                                   displayTraceEventsData(key, "sfcc")
                                 }
@@ -450,9 +481,10 @@ const Inventory = () => {
                               </tr>
                             ))
                           ) : (
-                            inventorySFCC.map((row, key) => (
+                            inventoryBalance.map((row, key) => (
                               <tr
                                 key={key}
+                                onClick={() => displayTraceEventsData(key, 'balance')}
                                 onClick={() =>
                                   displayTraceEventsData(key, "sfcc")
                                 }
@@ -497,7 +529,7 @@ const Inventory = () => {
                           <th>
                             <div className="th--wrapper">
                               <p>Quantity</p>
-                              {sortQuantityAsc ? (
+                              {sortAdjustmentAsc ? (
                                 <ImSortAlphaAsc
                                   className="sortIcon"
                                   onClick={() =>
@@ -518,7 +550,7 @@ const Inventory = () => {
                           <th>
                             <div className="th--wrapper">
                               <p>In Timestamp</p>
-                              {sortInAsc ? (
+                              {sortInAdjustmentAsc ? (
                                 <ImSortAlphaAsc
                                   className="sortIcon"
                                   onClick={() =>
@@ -538,7 +570,7 @@ const Inventory = () => {
                           <th>
                             <div className="th--wrapper">
                               <p>Out Timestamp</p>
-                              {sortOutAsc ? (
+                              {sortOutAdjustmentAsc ? (
                                 <ImSortAlphaAsc
                                   className="sortIcon"
                                   onClick={() =>
