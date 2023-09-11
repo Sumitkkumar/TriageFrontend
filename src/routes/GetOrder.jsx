@@ -3,6 +3,7 @@ import { useState } from "react";
 import "../css/GetOrder.css";
 import FlowDiagram from "../components/FlowDiagram";
 import { postData } from "../utils/helpers/postData";
+import { convertTimestampToEST } from "../utils/helpers/convertTimestampToEST";
 import TraceEvents from "../components/TraceEvents";
 import { ImSortAlphaDesc, ImSortAlphaAsc } from "react-icons/im";
 import { ORDER_DATA_URL, TRACE_EVENTS_DATA } from "../utils/API_URLs";
@@ -82,7 +83,7 @@ const GetOrder = () => {
   return (
     <section className="mainContainer">
       <div className="innerContainer">
-        <h1 className="pageTitle">Get Order</h1>
+        <h1 className="pageTitle">Get Order Details</h1>
         <div className="formContainer">
           <form onSubmit={handleSubmit}>
             <input
@@ -107,7 +108,7 @@ const GetOrder = () => {
               <div className="dataflowContainer">
                 {showContent && requestData ? (
                   <>
-                    <h2 className="pageSubHeadings">Data Flow</h2>
+                    <h2 className="pageSubHeadings">Order Flow</h2>
                     <FlowDiagram data={requestData} />
                   </>
                 ) : null}
@@ -118,13 +119,11 @@ const GetOrder = () => {
               <div className="tableContainer">
                 {showContent && (
                   <>
-                    <h2 className="pageSubHeadings">Table</h2>
                     <table className="orderContentTable">
                       <thead>
                         <tr>
                           <th>Dataflow Name</th>
                           <th>Triggered</th>
-                          <th>Rapi To WareHouse</th>
                           <th>Conversation Id</th>
                           <th>Failed</th>
                           <th>
@@ -171,11 +170,14 @@ const GetOrder = () => {
                               >
                                 <td>{row.dataflowName.toUpperCase()}</td>
                                 <td>{row.triggered}</td>
-                                <td>{row.rapiToWareHouse}</td>
                                 <td>{row.conversationId}</td>
                                 <td>{row.failed.toString()}</td>
-                                <td>{row.inTimestamp}</td>
-                                <td>{row.outTimestamp}</td>
+                                <td>
+                                  {convertTimestampToEST(row.inTimestamp)}
+                                </td>
+                                <td>
+                                  {convertTimestampToEST(row.outTimestamp)}
+                                </td>
                               </tr>
                             ))
                           ) : (
@@ -186,11 +188,14 @@ const GetOrder = () => {
                               >
                                 <td>{row.dataflowName.toUpperCase()}</td>
                                 <td>{row.triggered}</td>
-                                <td>{row.rapiToWareHouse}</td>
                                 <td>{row.conversationId}</td>
                                 <td>{row.failed.toString()}</td>
-                                <td>{row.inTimestamp}</td>
-                                <td>{row.outTimestamp}</td>
+                                <td>
+                                  {convertTimestampToEST(row.inTimestamp)}
+                                </td>
+                                <td>
+                                  {convertTimestampToEST(row.outTimestamp)}
+                                </td>
                               </tr>
                             ))
                           )
