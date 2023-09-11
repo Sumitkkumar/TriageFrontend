@@ -36,8 +36,7 @@
   min-height: fit-content;
   max-height: 350px;
   border-radius: 5px;
-  border: 2px solid var(--gray-400);
-  background-color: var(--neutral-100);
+  border: 1.5px solid var(--gray-200);
 }
 
 .content {
