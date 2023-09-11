@@ -36,6 +36,8 @@
   min-height: fit-content;
   max-height: 350px;
   border-radius: 5px;
+  border: 2px solid var(--gray-400);
+  background-color: var(--neutral-100);
 }
 
 .content {
@@ -78,4 +80,18 @@
 .button__copy {
   background-color: var(--green-600);
   color: var(--neutral-50);
+}
+
+.loading__wrapper {
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.loading__text {
+  color: var(--purple-300);
+  font-size: 1.5rem;
 }
