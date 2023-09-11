@@ -19,7 +19,7 @@ const FlowDiagram = ({ data }) => {
       },
     });
 
-    paper.translate(-200, 0);
+    paper.translate(-260, 0);
 
     const nodes = [];
     const nodesMap = new Map();
@@ -34,8 +34,8 @@ const FlowDiagram = ({ data }) => {
             fontFamily: "Arial",
           },
           body: {
-            fill: flow.failed === true ? colors.red300 : colors.gray200,
-            stroke: flow.failed === true ? colors.red600 : colors.gray400,
+            fill: flow.failed === true ? colors.red300 : colors.green300,
+            stroke: flow.failed === true ? colors.red600 : colors.gray500,
             strokeWidth: 1,
           },
         },
