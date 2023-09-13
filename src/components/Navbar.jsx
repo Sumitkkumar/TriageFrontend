@@ -6,7 +6,7 @@ const Navbar = () => {
     <nav>
       <div className="nav--wrapper">
         <img src={logo} alt="Accenture Logo" className="accenture--logo" />
-        <h1>RISE</h1>
+        <h1>RISE TRIAGE SYSTEM</h1>
       </div>
     </nav>
   );
