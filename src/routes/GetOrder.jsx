@@ -186,15 +186,9 @@ const GetOrder = () => {
                                 key={key}
                                 onClick={() => {
                                   displayTraceEventsData(key);
-                                  setSelectedDataIndex(key);
+                                  // setSelectedDataIndex(key);
                                 }}
-                                className={
-                                  key === selectedDataIndex
-                                    ? "selectedRow"
-                                    : row.failed
-                                    ? "failedRow"
-                                    : ""
-                                }
+                                className={row.failed ? "failedRow" : ""}
                               >
                                 <td>{row.dataflowName.toUpperCase()}</td>
                                 <td>{row.triggered}</td>
@@ -214,15 +208,9 @@ const GetOrder = () => {
                                 key={key}
                                 onClick={() => {
                                   displayTraceEventsData(key);
-                                  setSelectedDataIndex(key);
+                                  // setSelectedDataIndex(key);
                                 }}
-                                className={
-                                  key === selectedDataIndex
-                                    ? "selectedRow"
-                                    : row.failed
-                                    ? "failedRow"
-                                    : ""
-                                }
+                                className={row.failed ? "failedRow" : ""}
                               >
                                 <td>{row.dataflowName.toUpperCase()}</td>
                                 <td>{row.triggered}</td>

@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useRef} from "react";
 import "../css/GetOrder.css";
 import { postData } from "../utils/helpers/postData";
 import TraceEvents from "../components/TraceEvents";
@@ -9,8 +9,8 @@ import { ImSortAlphaDesc, ImSortAlphaAsc } from "react-icons/im";
 import LoadingScreen from "../components/LoadingScreen";
 
 const Inventory = () => {
-  const [UPC, setUPC] = useState("");
-  const [date, setDate] = useState();
+  const upcRef = useRef(null);
+  const dateRef = useRef(null);
   const [loading, setLoading] = useState(false);
   const [loadingTrace, setLoadingTrace] = useState(false);
   const [tableVisible, setTableVisible] = useState(false);
@@ -40,12 +40,6 @@ const Inventory = () => {
   const [inventoryBalance, setInventoryBalance] = useState([]);
   const [inventorySFCC, setInventorySFCC] = useState([]);
   const [inventoryAdjustment, setInventoryAdjustment] = useState([]);
-
-  const [selectedRowIndex, setSelectedRowIndex] = useState(null);
-
-  const handleRowClick = (key) => {
-    setSelectedRowIndex(key);
-  };
 
   const handleSort = (column, type) => {
     if (column === "inTimestamp") {
@@ -173,9 +167,11 @@ const Inventory = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setLoading(true);
+    console.log("UPC VALUE: " + upcRef.current.value);
+    console.log("DATE VALUE: " + dateRef.current.value);
     const data = await postData(INVENTORY_DATA, {
-      upc: UPC,
-      issueDate: date,
+      upc: upcRef.current.value,
+      issueDate: dateRef.current.value,
     });
 
     const flattenedData = [];
@@ -224,14 +220,13 @@ const Inventory = () => {
           <form onSubmit={handleSubmit}>
             <input
               type="text"
-              value={UPC}
+              ref={upcRef}
               placeholder="Enter the UPC"
-              onChange={(e) => setUPC(e.target.value)}
             />
             <input
               type="date"
+              ref={dateRef}
               placeholder="Enter the Date"
-              onChange={(e) => setDate(e.target.value)}
             />
             <button type="submit">Submit</button>
           </form>
@@ -318,14 +313,10 @@ const Inventory = () => {
                                 key={key}
                                 onClick={() => {
                                   displayTraceEventsData(key, "sfcc");
-                                  setSelectedDataIndex(key);
                                 }}
-                                className={
-                                  key === selectedDataIndex ? "selectedRow" : ""
-                                }
                               >
                                 <td>{row.dataflowName.toUpperCase()}</td>
-                                <td>{UPC}</td>
+                                <td>{upcRef.current.value}</td>
                                 <td>{row.conversationId}</td>
                                 <td>{row.quantity}</td>
                                 <td>{row.parentConversationId}</td>
@@ -343,14 +334,10 @@ const Inventory = () => {
                                 key={key}
                                 onClick={() => {
                                   displayTraceEventsData(key, "sfcc");
-                                  setSelectedDataIndex(key);
                                 }}
-                                className={
-                                  key === selectedDataIndex ? "selectedRow" : ""
-                                }
                               >
                                 <td>{row.dataflowName.toUpperCase()}</td>
-                                <td>{UPC}</td>
+                                <td>{upcRef.current.value}</td>
                                 <td>{row.conversationId}</td>
                                 <td>{row.quantity}</td>
                                 <td>{row.parentConversationId}</td>
@@ -457,14 +444,10 @@ const Inventory = () => {
                                 key={key}
                                 onClick={() => {
                                   displayTraceEventsData(key, "balance");
-                                  setTraceEventDataFlowName(key);
                                 }}
-                                className={
-                                  key === selectedDataIndex ? "selectedRow" : ""
-                                }
                               >
                                 <td>{row.dataflowName.toUpperCase()}</td>
-                                <td>{UPC}</td>
+                                <td>{upcRef.current.value}</td>
                                 <td>{row.conversationId}</td>
                                 <td>{row.quantity}</td>
                                 <td>{row.parentConversationId}</td>
@@ -482,14 +465,10 @@ const Inventory = () => {
                                 key={key}
                                 onClick={() => {
                                   displayTraceEventsData(key, "balance");
-                                  setTraceEventDataFlowName(key);
                                 }}
-                                className={
-                                  key === selectedDataIndex ? "selectedRow" : ""
-                                }
                               >
                                 <td>{row.dataflowName.toUpperCase()}</td>
-                                <td>{UPC}</td>
+                                <td>{upcRef.current.value}</td>
                                 <td>{row.conversationId}</td>
                                 <td>{row.quantity}</td>
                                 <td>{row.parentConversationId}</td>
@@ -596,14 +575,10 @@ const Inventory = () => {
                                 key={key}
                                 onClick={() => {
                                   displayTraceEventsData(key, "adjustment");
-                                  setTraceEventDataFlowName(key);
                                 }}
-                                className={
-                                  key === selectedDataIndex ? "selectedRow" : ""
-                                }
                               >
                                 <td>{row.dataflowName.toUpperCase()}</td>
-                                <td>{UPC}</td>
+                                <td>{upcRef.current.value}</td>
                                 <td>{row.conversationId}</td>
                                 <td>{row.quantity}</td>
                                 <td>{row.parentConversationId}</td>
@@ -621,14 +596,10 @@ const Inventory = () => {
                                 key={key}
                                 onClick={() => {
                                   displayTraceEventsData(key, "adjustment");
-                                  setSelectedDataIndex(key);
                                 }}
-                                className={
-                                  key === selectedDataIndex ? "selectedRow" : ""
-                                }
                               >
                                 <td>{row.dataflowName.toUpperCase()}</td>
-                                <td>{UPC}</td>
+                                <td>{upcRef.current.value}</td>
                                 <td>{row.conversationId}</td>
                                 <td>{row.quantity}</td>
                                 <td>{row.parentConversationId}</td>
@@ -659,7 +630,7 @@ const Inventory = () => {
                   {showTraceData && requestData[selectedDataIndex] ? (
                     <div>
                       <h2 className="pageSubHeadings">
-                        {requestData[selectedDataIndex].dataflowName}
+                        {traceEventDataFlowName}
                       </h2>
                       <h4>TraceEventsData</h4>
                       <TraceEvents data={traceEventsData} />
