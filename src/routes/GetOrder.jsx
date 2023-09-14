@@ -7,6 +7,7 @@ import TraceEvents from "../components/TraceEvents";
 import { ImSortAlphaDesc, ImSortAlphaAsc } from "react-icons/im";
 import { ORDER_DATA_URL, TRACE_EVENTS_DATA } from "../utils/API_URLs";
 import LoadingScreen from "../components/LoadingScreen";
+import ApiErrorModal from "../components/ApiErrorModal";
 
 const GetOrder = () => {
   const [orderId, setOrderId] = useState("");
@@ -23,6 +24,9 @@ const GetOrder = () => {
   const [sortInAsc, setSortInAsc] = useState(true);
   const [sortOutAsc, setSortOutAsc] = useState(true);
   const [toggleTableData, setToggleTableData] = useState(false);
+
+  const [error, setError] = useState(null);
+  const [blankOrderError, setBlankOrderError] = useState("");
 
   const handleSort = (column) => {
     setToggleTableData(true);
@@ -69,14 +73,30 @@ const GetOrder = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setLoading(true);
-    const data = await postData(ORDER_DATA_URL, { orderId: orderId });
-    if (data != null) {
-      setRequestData(data.result.dataflows);
+    setShowContent(false);
+    if (!orderId.trim()) {
+      setBlankOrderError("*Required field");
       setLoading(false);
-    } else {
-      setRequestData([]);
+      return;
     }
-    setShowContent(true);
+    setBlankOrderError("");
+    try {
+      const data = await postData(ORDER_DATA_URL, { orderId: orderId });
+      if (data != null) {
+        setRequestData(data.result.dataflows);
+        setLoading(false);
+        setShowContent(true);
+      } else {
+        setRequestData([]);
+        setLoading(false);
+      }
+    } catch (error) {
+      setError({
+        status: error.status,
+        message: error.message,
+      });
+      setLoading(false);
+    }
   };
 
   return (
@@ -95,6 +115,7 @@ const GetOrder = () => {
               Submit
             </button>
           </form>
+          {blankOrderError && <p style={{ color: "red" }}>{blankOrderError}</p>}
         </div>
 
         <div className="content__wrapper">
@@ -221,6 +242,14 @@ const GetOrder = () => {
           )}
         </div>
       </div>
+      {error && (
+        <ApiErrorModal
+          status={error.status}
+          message={error.message}
+          content={orderId}
+          onClose={() => setError(null)}
+        />
+      )}
     </section>
   );
 };

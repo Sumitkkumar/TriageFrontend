@@ -6,10 +6,11 @@ import TraceEvents from "../components/TraceEvents";
 import { INVENTORY_DATA, TRACE_EVENTS_DATA } from "../utils/API_URLs";
 import { ImSortAlphaDesc, ImSortAlphaAsc } from "react-icons/im";
 import LoadingScreen from "../components/LoadingScreen";
+import ApiErrorModal from "../components/ApiErrorModal";
 
 const Inventory = () => {
   const [UPC, setUPC] = useState("");
-  const [date, setDate] = useState();
+  const [date, setDate] = useState("");
   const [loading, setLoading] = useState(false);
   const [tableVisible, setTableVisible] = useState(false);
   const [showTraceData, setShowTraceData] = useState(false);
@@ -23,6 +24,10 @@ const Inventory = () => {
   const [sortOutAsc, setSortOutAsc] = useState(true);
   const [sortQuantityAsc, setSortQuantityAsc] = useState(true);
   const [toggleTableData, setToggleTableData] = useState(false);
+
+  const [upcBlankError, setUpcBlankError] = useState("");
+  const [dateBlankError, setDateBlankError] = useState("");
+  const [error, setError] = useState(null);
 
   const handleSort = (column) => {
     setToggleTableData(true);
@@ -77,32 +82,56 @@ const Inventory = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setUpcBlankError("");
+    setDateBlankError("");
+    let hasError = false;
+    if(UPC.trim() === "") {
+      setUpcBlankError('*Required field');
+      hasError = true;
+    }
+    if(date.trim() === "") {
+      setDateBlankError('*Required field');
+      hasError = true;
+    }
+    if(hasError) {
+      setRequestData([]);
+      return;
+    }
     setLoading(true);
-    const data = await postData(INVENTORY_DATA, {
-      upc: UPC,
-      issueDate: date,
-    });
-
-    const flattenedData = [];
-
-    for (const dataflowName in data) {
-      if (data.hasOwnProperty(dataflowName)) {
-        for (const item of data[dataflowName]) {
-          const newKeyValuePair = {
-            dataflowName: dataflowName,
-            ...item,
-          };
-          flattenedData.push(newKeyValuePair);
+    try {
+      const data = await postData(INVENTORY_DATA, {
+        upc: UPC,
+        issueDate: date,
+      });
+  
+      const flattenedData = [];
+  
+      for (const dataflowName in data) {
+        if (data.hasOwnProperty(dataflowName)) {
+          for (const item of data[dataflowName]) {
+            const newKeyValuePair = {
+              dataflowName: dataflowName,
+              ...item,
+            };
+            flattenedData.push(newKeyValuePair);
+          }
         }
       }
-    }
-
-    if (data != null) {
-      setRequestData(flattenedData);
-      setTableVisible(true);
+  
+      if (data != null) {
+        setRequestData(flattenedData);
+        setTableVisible(true);
+        setLoading(false);
+      } else {
+        setRequestData([]);
+        setLoading(false);
+      }
+    } catch(error) {
+      setError({
+        status: error.status,
+        message: error.message,
+      });
       setLoading(false);
-    } else {
-      setRequestData([]);
     }
   };
 
@@ -113,19 +142,27 @@ const Inventory = () => {
 
         <div className="formContainer">
           <form onSubmit={handleSubmit}>
+            <div className="inputContainer">
             <input
               type="text"
               value={UPC}
               placeholder="Enter the UPC"
               onChange={(e) => setUPC(e.target.value)}
             />
+            {upcBlankError && <p style={{ color: "red" }}>{upcBlankError}</p>}
+            </div>
+            <div className="inputContainer">
             <input
               type="date"
               placeholder="Enter the Date"
               onChange={(e) => setDate(e.target.value)}
             />
+            {dateBlankError && <p style={{ color: "red" }}>{dateBlankError}</p>}
+            </div>
             <button type="submit">Submit</button>
+           
           </form>
+          
         </div>
         <div className="content__wrapper">
           {loading ? (
@@ -251,6 +288,14 @@ const Inventory = () => {
           )}
         </div>
       </div>
+      {error && (
+        <ApiErrorModal
+          status={error.status}
+          message={error.message}
+          content={UPC}
+          onClose={() => setError(null)}
+        />
+      )}
     </section>
   );
 };
