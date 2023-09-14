@@ -26,6 +26,8 @@
   --purple-900: #581c87;
   --violet-600: #7c3aed;
   --green-600: #65a30d;
+  --red-200: #fecaca;
+  --red-300: #fca5a5;
   --red-400: #f87171;
   --red-600: #dc2626;
 }
@@ -39,7 +41,7 @@ body {
 
 nav {
   width: 100vw;
-  height: 80px;
+  height: 70px;
   box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   background-color: var(--neutral-50);
   display: grid;
@@ -58,6 +60,10 @@ nav {
   gap: 5rem;
 }
 
+.nav--wrapper h1 {
+  font-size: 1.35rem;
+}
+
 .accenture--logo {
   min-width: 100px;
   max-width: 5%;
@@ -70,7 +76,7 @@ nav {
 }
 
 .mainContainer {
-  min-height: calc(100vh - 80px);
+  min-height: calc(100vh - 70px);
   width: calc(100vw - 250px);
   position: absolute;
   top: 80px;

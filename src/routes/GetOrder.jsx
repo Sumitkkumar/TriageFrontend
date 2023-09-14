@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "../css/GetOrder.css";
 import FlowDiagram from "../components/FlowDiagram";
 import { postData } from "../utils/helpers/postData";
@@ -51,10 +51,10 @@ const GetOrder = () => {
   const displayTraceEventsData = async (key) => {
     setShowTraceData(true);
     setSelectedDataIndex(key);
+    setLoading(true);
     try {
       const jobName = requestData[key].dataflowName;
       const conversationId = requestData[key].conversationId;
-      setLoading(true);
       const data = await postData(TRACE_EVENTS_DATA, {
         jobName: jobName,
         conversationId: conversationId,
@@ -166,7 +166,12 @@ const GetOrder = () => {
                             sortedData.map((row, key) => (
                               <tr
                                 key={key}
-                                onClick={() => displayTraceEventsData(key)}
+                                onClick={() => {
+                                  displayTraceEventsData(key);
+                                }}
+                                className={row.failed ? "failedRow" : ""}
+                                // onMouseDown={handleMouseDown}
+                                // onMouseUp={handleMouseUp(key)}
                               >
                                 <td>{row.dataflowName.toUpperCase()}</td>
                                 <td>{row.triggered}</td>
@@ -184,7 +189,12 @@ const GetOrder = () => {
                             requestData.map((row, key) => (
                               <tr
                                 key={key}
-                                onClick={() => displayTraceEventsData(key)}
+                                onClick={() => {
+                                  displayTraceEventsData(key);
+                                }}
+                                className={row.failed ? "failedRow" : ""}
+                                // onMouseDown={handleMouseDown}
+                                // onMouseUp={handleMouseUp(key)}
                               >
                                 <td>{row.dataflowName.toUpperCase()}</td>
                                 <td>{row.triggered}</td>
