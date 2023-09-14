@@ -134,6 +134,16 @@
   background-color: var(--red-300);
 }
 
+.selectedRow {
+  background-color: var(--purple-300);
+}
+.orderContentTable tbody tr.selectedRow:hover {
+  background-color: var(--purple-300);
+}
+.tableContainer tbody tr.selectedRow:hover {
+  background-color: var(--purple-300);
+}
+
 /* Dataflow CSS */
 
 .dataflowContainer {
@@ -143,4 +153,13 @@
 .dataflowBox {
   border: 1px solid var(--gray-300);
   border-radius: 5px;
+}
+
+/* Trace Events CSS */
+
+.traceEventsContainer {
+  background-color: var(--neutral-100);
+  padding: 2rem;
+  border-radius: 5px;
+  border: 1.5px solid var(--gray-300);
 }

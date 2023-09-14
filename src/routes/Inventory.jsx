@@ -12,6 +12,7 @@ const Inventory = () => {
   const [UPC, setUPC] = useState("");
   const [date, setDate] = useState();
   const [loading, setLoading] = useState(false);
+  const [loadingTrace, setLoadingTrace] = useState(false);
   const [tableVisible, setTableVisible] = useState(false);
   const [showTraceData, setShowTraceData] = useState(false);
   const [selectedDataIndex, setSelectedDataIndex] = useState(null);
@@ -39,6 +40,12 @@ const Inventory = () => {
   const [inventoryBalance, setInventoryBalance] = useState([]);
   const [inventorySFCC, setInventorySFCC] = useState([]);
   const [inventoryAdjustment, setInventoryAdjustment] = useState([]);
+
+  const [selectedRowIndex, setSelectedRowIndex] = useState(null);
+
+  const handleRowClick = (key) => {
+    setSelectedRowIndex(key);
+  };
 
   const handleSort = (column, type) => {
     if (column === "inTimestamp") {
@@ -150,13 +157,13 @@ const Inventory = () => {
         conversationId = inventoryAdjustment[key].conversationId;
         setTraceEventDataFlowName("INVENTORY-ADJ-MSK-OMS");
       }
-      setLoading(true);
+      setLoadingTrace(true);
       const data = await postData(TRACE_EVENTS_DATA, {
         jobName: jobName,
         conversationId: conversationId,
       });
       setTraceEventsData(data);
-      setLoading(false);
+      setLoadingTrace(false);
     } catch (error) {
       console.error("Error fetching data:", error);
       return null;
@@ -309,8 +316,12 @@ const Inventory = () => {
                             sortedSfccData.map((row, key) => (
                               <tr
                                 key={key}
-                                onClick={() =>
-                                  displayTraceEventsData(key, "sfcc")
+                                onClick={() => {
+                                  displayTraceEventsData(key, "sfcc");
+                                  setSelectedDataIndex(key);
+                                }}
+                                className={
+                                  key === selectedDataIndex ? "selectedRow" : ""
                                 }
                               >
                                 <td>{row.dataflowName.toUpperCase()}</td>
@@ -330,8 +341,12 @@ const Inventory = () => {
                             inventorySFCC.map((row, key) => (
                               <tr
                                 key={key}
-                                onClick={() =>
-                                  displayTraceEventsData(key, "sfcc")
+                                onClick={() => {
+                                  displayTraceEventsData(key, "sfcc");
+                                  setSelectedDataIndex(key);
+                                }}
+                                className={
+                                  key === selectedDataIndex ? "selectedRow" : ""
                                 }
                               >
                                 <td>{row.dataflowName.toUpperCase()}</td>
@@ -440,8 +455,12 @@ const Inventory = () => {
                             sortedBalanceData.map((row, key) => (
                               <tr
                                 key={key}
-                                onClick={() =>
-                                  displayTraceEventsData(key, "balance")
+                                onClick={() => {
+                                  displayTraceEventsData(key, "balance");
+                                  setTraceEventDataFlowName(key);
+                                }}
+                                className={
+                                  key === selectedDataIndex ? "selectedRow" : ""
                                 }
                               >
                                 <td>{row.dataflowName.toUpperCase()}</td>
@@ -461,8 +480,12 @@ const Inventory = () => {
                             inventoryBalance.map((row, key) => (
                               <tr
                                 key={key}
-                                onClick={() =>
-                                  displayTraceEventsData(key, "balance")
+                                onClick={() => {
+                                  displayTraceEventsData(key, "balance");
+                                  setTraceEventDataFlowName(key);
+                                }}
+                                className={
+                                  key === selectedDataIndex ? "selectedRow" : ""
                                 }
                               >
                                 <td>{row.dataflowName.toUpperCase()}</td>
@@ -571,8 +594,12 @@ const Inventory = () => {
                             sortedAdjustmentData.map((row, key) => (
                               <tr
                                 key={key}
-                                onClick={() =>
-                                  displayTraceEventsData(key, "adjustment")
+                                onClick={() => {
+                                  displayTraceEventsData(key, "adjustment");
+                                  setTraceEventDataFlowName(key);
+                                }}
+                                className={
+                                  key === selectedDataIndex ? "selectedRow" : ""
                                 }
                               >
                                 <td>{row.dataflowName.toUpperCase()}</td>
@@ -592,8 +619,12 @@ const Inventory = () => {
                             inventoryAdjustment.map((row, key) => (
                               <tr
                                 key={key}
-                                onClick={() =>
-                                  displayTraceEventsData(key, "adjustment")
+                                onClick={() => {
+                                  displayTraceEventsData(key, "adjustment");
+                                  setSelectedDataIndex(key);
+                                }}
+                                className={
+                                  key === selectedDataIndex ? "selectedRow" : ""
                                 }
                               >
                                 <td>{row.dataflowName.toUpperCase()}</td>
@@ -621,17 +652,21 @@ const Inventory = () => {
                 )}
               </div>
               <br />
-              <>
-                {showTraceData && requestData[selectedDataIndex] ? (
-                  <div>
-                    <h2 className="pageSubHeadings">
-                      {traceEventDataFlowName}
-                    </h2>
-                    <h4>TraceEventsData</h4>
-                    <TraceEvents data={traceEventsData} />
-                  </div>
-                ) : null}
-              </>
+              {loadingTrace ? (
+                <LoadingScreen loading={loadingTrace} />
+              ) : (
+                <div className={showTraceData ? "traceEventsContainer" : ""}>
+                  {showTraceData && requestData[selectedDataIndex] ? (
+                    <div>
+                      <h2 className="pageSubHeadings">
+                        {requestData[selectedDataIndex].dataflowName}
+                      </h2>
+                      <h4>TraceEventsData</h4>
+                      <TraceEvents data={traceEventsData} />
+                    </div>
+                  ) : null}
+                </div>
+              )}
             </>
           )}
         </div>

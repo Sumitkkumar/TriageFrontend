@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useRef } from "react";
 import "../css/GetOrder.css";
 import FlowDiagram from "../components/FlowDiagram";
 import { postData } from "../utils/helpers/postData";
@@ -10,9 +10,10 @@ import { ORDER_DATA_URL, TRACE_EVENTS_DATA } from "../utils/API_URLs";
 import LoadingScreen from "../components/LoadingScreen";
 
 const GetOrder = () => {
-  const [orderId, setOrderId] = useState("");
+  const orderIdRef = useRef(null);
   const [showContent, setShowContent] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [loadingTrace, setLoadingTrace] = useState(false);
 
   const [selectedDataIndex, setSelectedDataIndex] = useState(null);
 
@@ -51,33 +52,51 @@ const GetOrder = () => {
   const displayTraceEventsData = async (key) => {
     setShowTraceData(true);
     setSelectedDataIndex(key);
-    setLoading(true);
     try {
       const jobName = requestData[key].dataflowName;
       const conversationId = requestData[key].conversationId;
+      setLoadingTrace(true);
       const data = await postData(TRACE_EVENTS_DATA, {
         jobName: jobName,
         conversationId: conversationId,
       });
       setTraceEventsData(data);
-      setLoading(false);
+      setLoadingTrace(false);
     } catch (error) {
       console.error("Error fetching data:", error);
       return null;
     }
   };
 
+  const resetStates = () => {
+    setShowContent(false);
+    setLoading(false);
+    setLoadingTrace(false);
+    setSelectedDataIndex(null);
+    setRequestData([]);
+    setSortedData([]);
+    setShowTraceData(false);
+    setTraceEventsData([]);
+    setSortInAsc(true);
+    setSortOutAsc(true);
+    setToggleTableData(false);
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
+    resetStates();
     setLoading(true);
-    const data = await postData(ORDER_DATA_URL, { orderId: orderId });
+    console.log("ORDER ID VALUE: " + orderIdRef.current.value);
+    const data = await postData(ORDER_DATA_URL, {
+      orderId: orderIdRef.current.value,
+    });
     if (data != null) {
       setRequestData(data.result.dataflows);
       setLoading(false);
+      setShowContent(true);
     } else {
       setRequestData([]);
     }
-    setShowContent(true);
   };
 
   return (
@@ -88,9 +107,8 @@ const GetOrder = () => {
           <form onSubmit={handleSubmit}>
             <input
               type="text"
-              value={orderId}
+              ref={orderIdRef}
               placeholder="Enter your order id"
-              onChange={(e) => setOrderId(e.target.value)}
             />
             <button type="submit" disabled={loading}>
               Submit
@@ -168,10 +186,15 @@ const GetOrder = () => {
                                 key={key}
                                 onClick={() => {
                                   displayTraceEventsData(key);
+                                  setSelectedDataIndex(key);
                                 }}
-                                className={row.failed ? "failedRow" : ""}
-                                // onMouseDown={handleMouseDown}
-                                // onMouseUp={handleMouseUp(key)}
+                                className={
+                                  key === selectedDataIndex
+                                    ? "selectedRow"
+                                    : row.failed
+                                    ? "failedRow"
+                                    : ""
+                                }
                               >
                                 <td>{row.dataflowName.toUpperCase()}</td>
                                 <td>{row.triggered}</td>
@@ -191,10 +214,15 @@ const GetOrder = () => {
                                 key={key}
                                 onClick={() => {
                                   displayTraceEventsData(key);
+                                  setSelectedDataIndex(key);
                                 }}
-                                className={row.failed ? "failedRow" : ""}
-                                // onMouseDown={handleMouseDown}
-                                // onMouseUp={handleMouseUp(key)}
+                                className={
+                                  key === selectedDataIndex
+                                    ? "selectedRow"
+                                    : row.failed
+                                    ? "failedRow"
+                                    : ""
+                                }
                               >
                                 <td>{row.dataflowName.toUpperCase()}</td>
                                 <td>{row.triggered}</td>
@@ -221,17 +249,21 @@ const GetOrder = () => {
                   </>
                 )}
               </div>
-              <>
-                {showTraceData && requestData[selectedDataIndex] ? (
-                  <div>
-                    <h2 className="pageSubHeadings">
-                      {requestData[selectedDataIndex].dataflowName}
-                    </h2>
-                    <h4>TraceEventsData</h4>
-                    <TraceEvents data={traceEventsData} />
-                  </div>
-                ) : null}
-              </>
+              {loadingTrace ? (
+                <LoadingScreen loading={loadingTrace} />
+              ) : (
+                <div className={showTraceData ? "traceEventsContainer" : ""}>
+                  {showTraceData && requestData[selectedDataIndex] ? (
+                    <div>
+                      <h2 className="pageSubHeadings">
+                        {requestData[selectedDataIndex].dataflowName}
+                      </h2>
+                      <h4>TraceEventsData</h4>
+                      <TraceEvents data={traceEventsData} />
+                    </div>
+                  ) : null}
+                </div>
+              )}
             </>
           )}
         </div>
