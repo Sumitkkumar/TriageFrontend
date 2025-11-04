@@ -11,14 +11,15 @@
 }
 
 .formContainer input {
-  font-family: "Lato", sans-serif;
   font-size: 1rem;
   outline: none;
   border: none;
   border-radius: 5px;
   width: 220px;
   height: 40px;
-  background-color: var(--gray-200);
+  border: 1.5px solid var(--gray-300);
+  border-radius: 5px;
+  background-color: var(--neutral-50);
   color: var(--gray-500);
   padding-left: 0.75rem;
 }
@@ -41,7 +42,6 @@
 .formContainer button {
   /* margin-left: 1rem; */
   font-size: 0.95rem;
-  font-family: "Lato", sans-serif;
   border: none;
   border-radius: 5px;
   background-color: var(--green-600);
@@ -52,8 +52,8 @@
 }
 
 .formContainer button:hover {
-  background-color: #22c55e;
-  border: 2px solid var(--green-600);
+  /* background-color: #22c55e; */
+  opacity: 0.7;
 }
 
 .formContainer button:disabled {
@@ -126,6 +126,24 @@
   background-color: var(--purple-100);
 }
 
+.failedRow {
+  background-color: var(--red-200);
+}
+
+.orderContentTable tbody tr.failedRow:hover {
+  background-color: var(--red-300);
+}
+
+.selectedRow {
+  background-color: var(--purple-300);
+}
+.orderContentTable tbody tr.selectedRow:hover {
+  background-color: var(--purple-300);
+}
+.tableContainer tbody tr.selectedRow:hover {
+  background-color: var(--purple-300);
+}
+
 /* Dataflow CSS */
 
 .dataflowContainer {
@@ -137,12 +155,11 @@
   border-radius: 5px;
 }
 
-.showMoreBtn {
-  color: blue;
-  cursor: pointer;
-}
+/* Trace Events CSS */
 
-.showMoreBtn:hover {
-  text-decoration: underline;
-  color: var(--purple-700);
+.traceEventsContainer {
+  background-color: var(--neutral-100);
+  padding: 2rem;
+  border-radius: 5px;
+  border: 1.5px solid var(--gray-300);
 }

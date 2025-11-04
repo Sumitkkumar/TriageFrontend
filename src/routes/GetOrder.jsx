@@ -1,8 +1,9 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import "../css/GetOrder.css";
 import FlowDiagram from "../components/FlowDiagram";
 import { postData } from "../utils/helpers/postData";
+import { convertTimestampToEST } from "../utils/helpers/convertTimestampToEST";
 import TraceEvents from "../components/TraceEvents";
 import { ImSortAlphaDesc, ImSortAlphaAsc } from "react-icons/im";
 import { ORDER_DATA_URL, TRACE_EVENTS_DATA } from "../utils/API_URLs";
@@ -10,9 +11,10 @@ import LoadingScreen from "../components/LoadingScreen";
 import ApiErrorModal from "../components/ApiErrorModal";
 
 const GetOrder = () => {
-  const [orderId, setOrderId] = useState("");
+  const orderIdRef = useRef(null);
   const [showContent, setShowContent] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [loadingTrace, setLoadingTrace] = useState(false);
 
   const [selectedDataIndex, setSelectedDataIndex] = useState(null);
 
@@ -57,59 +59,60 @@ const GetOrder = () => {
     try {
       const jobName = requestData[key].dataflowName;
       const conversationId = requestData[key].conversationId;
-      setLoading(true);
+      setLoadingTrace(true);
       const data = await postData(TRACE_EVENTS_DATA, {
         jobName: jobName,
         conversationId: conversationId,
       });
       setTraceEventsData(data);
-      setLoading(false);
+      setLoadingTrace(false);
     } catch (error) {
       console.error("Error fetching data:", error);
       return null;
     }
   };
 
+  const resetStates = () => {
+    setShowContent(false);
+    setLoading(false);
+    setLoadingTrace(false);
+    setSelectedDataIndex(null);
+    setRequestData([]);
+    setSortedData([]);
+    setShowTraceData(false);
+    setTraceEventsData([]);
+    setSortInAsc(true);
+    setSortOutAsc(true);
+    setToggleTableData(false);
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
+    resetStates();
     setLoading(true);
-    setShowContent(false);
-    if (!orderId.trim()) {
-      setBlankOrderError("*Required field");
+    console.log("ORDER ID VALUE: " + orderIdRef.current.value);
+    const data = await postData(ORDER_DATA_URL, {
+      orderId: orderIdRef.current.value,
+    });
+    if (data != null) {
+      setRequestData(data.result.dataflows);
       setLoading(false);
-      return;
-    }
-    setBlankOrderError("");
-    try {
-      const data = await postData(ORDER_DATA_URL, { orderId: orderId });
-      if (data != null) {
-        setRequestData(data.result.dataflows);
-        setLoading(false);
-        setShowContent(true);
-      } else {
-        setRequestData([]);
-        setLoading(false);
-      }
-    } catch (error) {
-      setError({
-        status: error.status,
-        message: error.message,
-      });
-      setLoading(false);
+      setShowContent(true);
+    } else {
+      setRequestData([]);
     }
   };
 
   return (
     <section className="mainContainer">
       <div className="innerContainer">
-        <h1 className="pageTitle">Get Order</h1>
+        <h1 className="pageTitle">Get Order Details</h1>
         <div className="formContainer">
           <form onSubmit={handleSubmit}>
             <input
               type="text"
-              value={orderId}
+              ref={orderIdRef}
               placeholder="Enter your order id"
-              onChange={(e) => setOrderId(e.target.value)}
             />
             <button type="submit" disabled={loading}>
               Submit
@@ -128,7 +131,7 @@ const GetOrder = () => {
               <div className="dataflowContainer">
                 {showContent && requestData ? (
                   <>
-                    <h2 className="pageSubHeadings">Data Flow</h2>
+                    <h2 className="pageSubHeadings">Order Flow</h2>
                     <FlowDiagram data={requestData} />
                   </>
                 ) : null}
@@ -139,13 +142,11 @@ const GetOrder = () => {
               <div className="tableContainer">
                 {showContent && (
                   <>
-                    <h2 className="pageSubHeadings">Table</h2>
                     <table className="orderContentTable">
                       <thead>
                         <tr>
                           <th>Dataflow Name</th>
                           <th>Triggered</th>
-                          <th>Rapi To WareHouse</th>
                           <th>Conversation Id</th>
                           <th>Failed</th>
                           <th>
@@ -188,30 +189,44 @@ const GetOrder = () => {
                             sortedData.map((row, key) => (
                               <tr
                                 key={key}
-                                onClick={() => displayTraceEventsData(key)}
+                                onClick={() => {
+                                  displayTraceEventsData(key);
+                                  // setSelectedDataIndex(key);
+                                }}
+                                className={row.failed ? "failedRow" : ""}
                               >
                                 <td>{row.dataflowName.toUpperCase()}</td>
                                 <td>{row.triggered}</td>
-                                <td>{row.rapiToWareHouse}</td>
                                 <td>{row.conversationId}</td>
                                 <td>{row.failed.toString()}</td>
-                                <td>{row.inTimestamp}</td>
-                                <td>{row.outTimestamp}</td>
+                                <td>
+                                  {convertTimestampToEST(row.inTimestamp)}
+                                </td>
+                                <td>
+                                  {convertTimestampToEST(row.outTimestamp)}
+                                </td>
                               </tr>
                             ))
                           ) : (
                             requestData.map((row, key) => (
                               <tr
                                 key={key}
-                                onClick={() => displayTraceEventsData(key)}
+                                onClick={() => {
+                                  displayTraceEventsData(key);
+                                  // setSelectedDataIndex(key);
+                                }}
+                                className={row.failed ? "failedRow" : ""}
                               >
                                 <td>{row.dataflowName.toUpperCase()}</td>
                                 <td>{row.triggered}</td>
-                                <td>{row.rapiToWareHouse}</td>
                                 <td>{row.conversationId}</td>
                                 <td>{row.failed.toString()}</td>
-                                <td>{row.inTimestamp}</td>
-                                <td>{row.outTimestamp}</td>
+                                <td>
+                                  {convertTimestampToEST(row.inTimestamp)}
+                                </td>
+                                <td>
+                                  {convertTimestampToEST(row.outTimestamp)}
+                                </td>
                               </tr>
                             ))
                           )
@@ -227,17 +242,21 @@ const GetOrder = () => {
                   </>
                 )}
               </div>
-              <>
-                {showTraceData && requestData[selectedDataIndex] ? (
-                  <div>
-                    <h2 className="pageSubHeadings">
-                      {requestData[selectedDataIndex].dataflowName}
-                    </h2>
-                    <h4>TraceEventsData</h4>
-                    <TraceEvents data={traceEventsData} />
-                  </div>
-                ) : null}
-              </>
+              {loadingTrace ? (
+                <LoadingScreen loading={loadingTrace} />
+              ) : (
+                <div className={showTraceData ? "traceEventsContainer" : ""}>
+                  {showTraceData && requestData[selectedDataIndex] ? (
+                    <div>
+                      <h2 className="pageSubHeadings">
+                        {requestData[selectedDataIndex].dataflowName}
+                      </h2>
+                      <h4>TraceEventsData</h4>
+                      <TraceEvents data={traceEventsData} />
+                    </div>
+                  ) : null}
+                </div>
+              )}
             </>
           )}
         </div>
