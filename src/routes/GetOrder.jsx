@@ -108,7 +108,7 @@ const GetOrder = () => {
             <input
               type="text"
               value={orderId}
-              placeholder="Enter your order id"
+              placeholder="Enter your order Id"
               onChange={(e) => setOrderId(e.target.value)}
             />
             <button type="submit" disabled={loading}>
